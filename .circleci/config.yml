@@ -25,7 +25,7 @@ jobs:
           name: Set file permissions
           command: chmod -R 755 cypress
 
-      - run: npm test --record --key c64c4463-2120-476e-a8fd-f2da8db1b592  # spustenie testov s nahrávaním výsledkov do cloudu
+      - run: npx test --record --key c64c4463-2120-476e-a8fd-f2da8db1b592  # spustenie testov s nahrávaním výsledkov do cloudu
 
 workflows:
   version: 2  # verzia workflowu
