@@ -6,7 +6,7 @@ jobs:
       - image: circleci/node:14  # použijeme obraz Node.js verzie 14
 
     
-
+    parallelism: 3
     steps:  # kroky, ktoré sa majú vykonať v jobe
       - checkout  # stiahnutie kódu z repozitára
       - restore_cache:  # obnova cache pre npm balíčky
