@@ -13,6 +13,10 @@ jobs:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             # Ak sa nezmenil package-lock.json, použijeme uloženú cache
       - run: npm install  # inštalácia npm balíčkov
+      - run:
+          name: Inštalácia knižnice libnss3
+          command: sudo apt-get update && sudo apt-get install -y libnss3
+          # inštalácia knižnice libnss3
       - run: npm test  # spustenie testov
       - run:
           name: Spustenie Cypress testov
