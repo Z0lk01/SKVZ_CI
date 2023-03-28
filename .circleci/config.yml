@@ -1,3 +1,4 @@
+
 version: 2.1  # verzia konfiguračného súboru
 
 jobs:
@@ -6,7 +7,7 @@ jobs:
       - image: circleci/node:14  # použijeme obraz Node.js verzie 14
 
     
-
+    parallelism: 3
     steps:  # kroky, ktoré sa majú vykonať v jobe
       - checkout  # stiahnutie kódu z repozitára
       - restore_cache:  # obnova cache pre npm balíčky
@@ -21,7 +22,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package-lock.json" }}
 
-      - run: npm test  # spustenie testov
+      - run: npm test -- --record --key c64c4463-2120-476e-a8fd-f2da8db1b592  # spustenie testov s nahrávaním výsledkov do cloudu
 
 workflows:
   version: 2  # verzia workflowu
