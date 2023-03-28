@@ -1,3 +1,4 @@
+
 version: 2.1  # verzia konfiguračného súboru
 
 jobs:
@@ -5,6 +6,7 @@ jobs:
     docker:  # definujeme obraz Dockeru
       - image: circleci/node:14  # použijeme obraz Node.js verzie 14
 
+    
     parallelism: 3
     steps:  # kroky, ktoré sa majú vykonať v jobe
       - checkout  # stiahnutie kódu z repozitára
@@ -12,21 +14,15 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             # Ak sa nezmenil package-lock.json, použijeme uloženú cache
+
       - run: npm install  # inštalácia npm balíčkov
-      - run:
-          name: Inštalácia knižnice libnss3
-          command: sudo apt-get update && sudo apt-get install -y libnss3
-          # inštalácia knižnice libnss3
-      - run: npm test  # spustenie testov
-      - run:
-          name: Spustenie Cypress testov
-          command: npx cypress run --record --key c64c4463-2120-476e-a8fd-f2da8db1b592
-          # spustenie Cypress testov s nahrávaním výsledkov
 
       - save_cache:  # uloženie cache pre npm balíčky
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package-lock.json" }}
+
+      - run: npm test  # spustenie testov
 
 workflows:
   version: 2  # verzia workflowu
