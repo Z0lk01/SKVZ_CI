@@ -1,10 +1,13 @@
 version: '2.1'
 orbs:
-  cypress: cypress-io/cypress@3
+  node: circleci/node@x.y
 workflows:
-  use-my-orb:
+  matrix-tests:
     jobs:
-      - cypress/run:
-          cypress-command: npx cypress run --browser chrome
-          install-browsers: true
-          start-command: 'npm run start:dev'
+      - node/test:
+          matrix:
+            parameters:
+              version:
+                - 13.11.0
+                - 12.16.0
+                - 10.19.0
