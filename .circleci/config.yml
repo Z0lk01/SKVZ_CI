@@ -22,7 +22,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package-lock.json" }}
 
-      - run: npm test  # spustenie testov
+      - run: --record --key c64c4463-2120-476e-a8fd-f2da8db1b592  # spustenie testov
 
 workflows:
   version: 2  # verzia workflowu
