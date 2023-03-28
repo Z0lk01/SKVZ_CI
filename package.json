@@ -6,7 +6,8 @@
     "cypress-parallel": "^0.12.0"
   }
   ,"scripts": {
-    "test": "cypress run --config-file cypress/e2e/skvz.cy.js"
+    "test": "npm run cy:run",
+    "cy:run": "cypress run --config-file cypress/e2e/skvz.cy.js"
   }
   
 
