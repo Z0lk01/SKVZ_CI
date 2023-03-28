@@ -14,7 +14,7 @@ jobs:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             # Ak sa nezmenil package-lock.json, použijeme uloženú cache
 
-      - run: npm install  # inštalácia npm balíčkov
+      - run: npm install cypress --save-dev  # inštalácia npm balíčkov
 
       - save_cache:  # uloženie cache pre npm balíčky
           paths:
