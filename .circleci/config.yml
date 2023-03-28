@@ -23,7 +23,7 @@ jobs:
 
       - run:
           name: Set file permissions
-          command: icacls cypress /grant Everyone:\(R)
+          command: icacls cypress /grant Everyone:R
 
       - run: npm test --record --key c64c4463-2120-476e-a8fd-f2da8db1b592  # spustenie testov s nahrávaním výsledkov do cloudu
 
