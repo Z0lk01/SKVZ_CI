@@ -1,4 +1,3 @@
-
 version: 2.1  # verzia konfiguračného súboru
 
 jobs:
@@ -15,14 +14,14 @@ jobs:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             # Ak sa nezmenil package-lock.json, použijeme uloženú cache
 
-      - run: npm install  # inštalácia npm balíčkov
+      - run: npm install cypress  # inštalácia Cypress
 
       - save_cache:  # uloženie cache pre npm balíčky
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package-lock.json" }}
 
-      - run: npm test --skvz.cy.js --record --key c64c4463-2120-476e-a8fd-f2da8db1b592  # spustenie testov s nahrávaním výsledkov do cloudu
+      - run: $(npm bin)/cypress run --record --key c64c4463-2120-476e-a8fd-f2da8db1b592  # spustenie testov s nahrávaním výsledkov do cloudu
 
 workflows:
   version: 2  # verzia workflowu
