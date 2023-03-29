@@ -8,6 +8,7 @@
   ,"scripts": {
     "test": "npm run cy:run",
     "cy:run": "cypress run --config-file cypress/e2e/skvz.cy.js"
+    ,"start": "cypress/e2e/skvz.cy.js"
   }
   
 
