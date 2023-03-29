@@ -24,7 +24,7 @@ it("Test 1", () => {
         .should("exist")
         cy
         .get("#otazkacislo_13")
-        .click("force: true")
+        .click()
         cy
         .get("#answer_b")
         .click()
