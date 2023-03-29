@@ -24,24 +24,24 @@ it("Test 1", () => {
         .should("exist")
         cy
         .get("#otazkacislo_13")
-        .click()
+        .click({force: true})
         cy
         .get("#answer_b")
-        .click()
+        .click({force: true})
         cy
         .get("#nextBtn")
-        .click()
+        .click({force: true})
         cy
         .get("#answer_b")
         cy
         .get("#nextBtn")
-        .click()
+        .click({force: true})
         cy
         .get("#answer_b")
-        .click()
+        .click({force: true})
         cy
         .get("#finishBtn")
-        .click()
+        .click({force: true})
 
 });
 
