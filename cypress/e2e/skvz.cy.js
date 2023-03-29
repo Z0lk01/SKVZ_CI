@@ -18,6 +18,11 @@ it("Test 1", () => {
         .should("be.visible")
         .click()
         cy
+        .wait(3500)
+        cy
+        .get("#otazkacislo_13")
+        .should("exist")
+        cy
         .get("#otazkacislo_13")
         .click("force: true")
         cy
