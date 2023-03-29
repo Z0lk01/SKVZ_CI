@@ -19,7 +19,7 @@ it("Test 1", () => {
         .click()
         cy
         .get("#otazkacislo_13")
-        .click()
+        .click("force: true")
         cy
         .get("#answer_b")
         .click()
