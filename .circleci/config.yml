@@ -6,5 +6,5 @@ workflows:
     jobs:
       - cypress/run:
           cypress-command: npx cypress run --parallel --record --key c64c4463-2120-476e-a8fd-f2da8db1b592
-          parallelism: 40
+          parallelism: 30
           
