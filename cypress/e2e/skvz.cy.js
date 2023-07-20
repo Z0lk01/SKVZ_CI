@@ -13,9 +13,8 @@ describe('Test TSS', () => {
         });
 
 it("Konto MZa", () => {
-        cy.get('#user_login')
-        .click
-        .type("mzilka:mza")
+        cy.get('#user_login') .type("mzilka:mza")
+        
         cy.get('#user_pass')
         .click
         .type("alkoholik")
