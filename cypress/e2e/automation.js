@@ -1,4 +1,3 @@
-
 /// <reference types="cypress" />
 const { type } = require("os");
 describe('Test TSS', () => {
@@ -9,20 +8,21 @@ describe('Test TSS', () => {
         .clearLocalStorage()
         cy
         .visit("http://www.tssmonitoring.sk")
-         
-        });
-
-it("Konto MZa", () => {
-        
-
-});
+        })
+    })
+    ;
+    it("Test 1", () => {
+        cy.get
 
 
 
 
-    
 
 
 
 
-});
+
+
+
+
+    });
