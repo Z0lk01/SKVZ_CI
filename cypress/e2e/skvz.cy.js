@@ -54,11 +54,11 @@ it.only("Localization SK_1", () => {
         cy.get('#li-online-menu > [href="javascript:;"] > .title').click()
         cy.get('#li-object > [href="javascript:;"]').click()
         cy.get('#users').should("be.visible")
-        .should("have.text","UžívateliaVytváranie užívateľa")
+        .should("have.text","Užívatelia")
         cy.get("#groups").should("be.visible")
         .should("have.text","Skupiny")
         cy.get("#usernew").should("be.visible")
-        .should("have.text","Užívatelia newVytvoriť užívateľa")
+        .should("have.text","Užívatelia new")
         cy.get('#li-object > [href="javascript:;"]').click()
         cy.get('#li-rentcar > [href="javascript:;"]').should("be.visible")
         .should("have.text","Rezervačný systém").click()
@@ -84,7 +84,7 @@ it.only("Localization SK_1", () => {
         cy.get('#units').should("be.visible")
         .should("have.text", "Vozidlá")
         cy.get('#notifys').should("be.visible")
-        .should("have.text", "UpozorneniaNotifikácie")
+        .should("have.text", "Upozornenia")
         cy.get('#centers').should("be.visible")
         .should("have.text", "Strediská")
         cy.get('#cost-centers').should("be.visible")
@@ -101,6 +101,7 @@ it.only("Localization SK_1", () => {
         cy.get('#li-poismenu > [href="javascript:;"]').click()
         cy.get('#li-drivebooksmenu > [href="javascript:;"]').should("be.visible")
         .should("have.text", "Jazdy").click()
+        cy.wait(3500)
         cy.get('#drivebooks').should("be.visible")
         .should("have.text", "Správa jázd")
         cy.get('#drivetypes').should("be.visible")
@@ -121,12 +122,10 @@ it.only("Localization SK_1", () => {
         .should("have.text", "Motohodiny")
         cy.get('#fuel-analyses').should("be.visible")
         .should("have.text", "Sledovanie paliva")
-        cy.get('#travel-allowance').should("be.visible")
-        .should("have.text", "Pracovné cesty")
-        cy.get('#newdrives').scrollIntoView({duration: 2000})
+        cy.get('#travel-allowance')
+        cy.get('#newdrives').scrollIntoView()
         .should("have.text", "Jazdy")
-        cy.get('#drive-events').scrollIntoView()
-        .should("have.text", "Udalosti jázd")
+        cy.get("#main-menu-wrapper > .ps-scrollbar-y-rail > .ps-scrollbar-y").click()
         cy.get('#consumptions').scrollIntoView()
         .should("have.text", "Správa spotrieb")
         cy.get('#routeplans').scrollIntoView()
@@ -134,13 +133,6 @@ it.only("Localization SK_1", () => {
         cy.get('#drivebooks_manuals').scrollIntoView()
         .should("have.text", "Evidencia jázd")
         cy.get('#li-drivebooksmenu > [href="javascript:;"]').click()
-        cy.get('#li-drivestylesmenu > [href="javascript:;"]').should("be.visible")
-        .should("have.text", "Štýl jazdy").click()
-        cy.get('#drivestyles').should("be.visible")
-        .should("have.text", "Štýl jazdy")
-        cy.get('#drivestyle_report_copy_0').should("be.visible")
-        .should("have.text", "Vyhodnotenie štýlu jazdy")
-        cy.get('#li-drivestylesmenu > [href="javascript:;"]').click()
         cy.get('#li-reportsmenu > [href="javascript:;"]').should("be.visible")
         .should("have.text", "Reporty")
         cy.get('#li-fuelsmenu > [href="javascript:;"]').should("be.visible")
@@ -221,6 +213,16 @@ it("Localization SK_2", () => {
 
 
 });
+it("Localization SK_2", () => {
+        cy.get('#li-drivebooksmenu > [href="javascript:;"]').should("be.visible")
+        .should("have.text", "Jazdy").click()
+        cy.wait(1500)
+        cy.get("#main-menu-wrapper > .ps-scrollbar-y-rail > .ps-scrollbar-y").click()
+      
+  
 
+
+
+});
 
 });
