@@ -15,7 +15,7 @@ describe('Test TSS', () => {
         .type("alkoholik")
         cy.get("#wp-submit") .click()
         cy.wait(15000)
-        cy.get(".confirm-modal-close") .click()
+        cy.get(".confirm-modal-close") .click({force: true})
          
         });
 
