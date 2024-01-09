@@ -19,7 +19,7 @@ describe('Test TSS', () => {
          
         });
 
-it.only("Localization SK_1", () => {
+it("Localization SK_1", () => {
         
         cy.get("#mainboard-filter-area > h1").should('contain', 'Dashboard')
         cy.get('#li-online-menu > [href="javascript:;"] > .title').should("be.visible") .click()

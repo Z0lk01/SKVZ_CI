@@ -7,7 +7,7 @@ describe('Test TSS', () => {
         cy
         .clearLocalStorage()
         cy
-        .visit("http://www.tssmonitoring.sk")
+        .visit("http://www.support.tssmonitoring.sk")
         })
     })
     ;
