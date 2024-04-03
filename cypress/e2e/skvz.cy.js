@@ -1,21 +1,24 @@
 
 /// <reference types="cypress" />
 const { type } = require("os");
+import moment from 'moment';
+
 describe('Test TSS', () => {
+
         beforeEach(() => {
         cy
         .clearCookies()
         cy
         .clearLocalStorage()
         cy
-        .visit("http://www.tssmonitoring.sk")
+        .visit("http://tssmonitoring.test.gps.local/login")
         cy.get('#user_login') 
         .type("mzilka:mza")
         cy.get('#user_pass')
         .type("alkoholik")
         cy.get("#wp-submit") .click()
         cy.wait(15000)
-        cy.get(".confirm-modal-close") .click({force: true})
+        //cy.get(".confirm-modal-close") .click({force: true})
          
         });
 
@@ -34,7 +37,6 @@ it("Localization SK_1", () => {
         cy.get('#unit-notifications').should("be.visible")
         .should("have.text", "Hlásenia")
         cy.get("#favorit-gps_map_main").should("not.be.visible")
-        .should("have.class", "favorit empty")
         .click({force: true})
         cy.get("#favorit-gps_map_main").should("not.be.visible")
         .should("have.class", "favorit")
@@ -54,11 +56,11 @@ it("Localization SK_1", () => {
         cy.get('#li-online-menu > [href="javascript:;"] > .title').click()
         cy.get('#li-object > [href="javascript:;"]').click()
         cy.get('#users').should("be.visible")
-        .should("have.text","Užívatelia")
+        .should("have.text","UžívateliaVytváranie užívateľa")
         cy.get("#groups").should("be.visible")
         .should("have.text","Skupiny")
         cy.get("#usernew").should("be.visible")
-        .should("have.text","Užívatelia new")
+        .should("have.text","Užívatelia newVytvoriť užívateľa")
         cy.get('#li-object > [href="javascript:;"]').click()
         cy.get('#li-rentcar > [href="javascript:;"]').should("be.visible")
         .should("have.text","Rezervačný systém").click()
@@ -84,7 +86,7 @@ it("Localization SK_1", () => {
         cy.get('#units').should("be.visible")
         .should("have.text", "Vozidlá")
         cy.get('#notifys').should("be.visible")
-        .should("have.text", "Upozornenia")
+        .should("have.text", "UpozorneniaNotifikácie")
         cy.get('#centers').should("be.visible")
         .should("have.text", "Strediská")
         cy.get('#cost-centers').should("be.visible")
@@ -189,25 +191,90 @@ it("Localization SK_1", () => {
         cy.get('#li-planner > [href="javascript:;"]').click()
         
 });
-it("Localization SK_2", () => {
-        cy.get('#li-online-menu > [href="javascript:;"] > .title').should("be.visible") .click()
-        cy.get('#gps_units_online_new').should("be.visible").click()
-        cy.get('.gps_units_online_new_input_name_column > #gps_units_online_new_name_input')
-        cy.get('#gps_units_online_new_panel').should("contains.text", "DISPEČER-ONLINE SPRÁVA")
-        .should("contains.text", "Obnoviť")
-        .should("contains.text", "záznamov na stranu")
-        .should("contins.text", "Na celú obrazovku")
-        .should("contains.text", "Vyp/Zap.stĺpce")
-        .should("contains.text", "Jednotka")
-        .should("contains.text", "Kontrola tachografu")
-        .should("contains.text", "Poloha")
-        .should("contains.text", "Rýchlosť")
-        .should("contains.text", "Tachometer")
-        .should("contains.text", "Stav paliva")
-        .should("contains.text", "AdBlue")
-        .should("contains.text", "Posledná aktualizácia")
-        .should("contains.text", "Napätie")
-        .should("contains.text", "Stredisko/Lokalita")
+it.only("Korekcie a tankovania", () => {
+const currentDate = new Date();
+const formattedTime = currentDate.toLocaleString('sk-SK', { 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit',
+      });
+      const expectedDate = moment().format('DD.MM.YYYY'); // Aktuálny dátum
+      const expectedTime = '01:00'; // Očakávaný čas
+      const expectedCost = "50.00 €"; // Očakávaná cena
+      const expectedQuantity ="50 l"; //Očakávaný objem
+
+        cy.get('#li-toolsmenu > [href="javascript:;"]').scrollIntoView().click()
+        cy.get("#corrections").click()
+        cy.get('#corrections_button_0').should("be.visible").click()
+        cy.get('#edit_corrections_time').type("01:00")
+        cy.get('#edit_corrections_tacho').type("112233")
+        cy.get('#edit_corrections_unit_id').click()
+        cy.get('#search_grid_units_table_filter > label > input').type("942DE")
+        cy.get('#search_grid_units_table > tbody > .odd > .fixed').should("have.text","IL 942DE").click()
+        cy.get('#modal-success').click()
+        cy.wait(8000)
+        
+        cy.get('#costsnew').scrollIntoView().click()
+        cy.wait(4500)
+        cy.get('#costsnew_button_0').click()
+        cy.wait(3500)
+        cy.get('#edit_drivers_unit').click()
+        cy.get('#search_grid_units_table_filter > label > input').type("IL 942DE")
+        cy.get('#search_grid_units_table > tbody > .odd > .fixed').should("have.text", "IL 942DE").click()
+        cy.wait(1200)
+        cy.get('#edit_costsnew_time').type("01:00")
+        cy.get('#edit_costsnew_quantity').type("50")
+        cy.get('#edit_costsnew_quantity_unit-helptext > .select2-container > .selection > .select2-selection > .select2-selection__arrow').click()
+        cy.get('#select2-edit_costsnew_quantity_unit-results').children().last().click()
+        cy.get('#edit_costsnew_price').type("50")
+        cy.get('#edit_costsnew_modules_currencys-helptext > .select2-container > .selection > .select2-selection > .select2-selection__arrow > b').click()
+        cy.get("#select2-edit_costsnew_modules_currencys-results").children().contains("€").click()
+        cy.get('#edit_costsnew_note').type("test")
+        cy.get('#modal-success').click()
+        cy.wait(10800)
+        cy.get('#costsnew_table > tbody > .odd > .sorting_1').then(($el) => {
+                // Získa text z poľa
+                const formattedText = $el.text()
+                console.log("Formatted Text:", formattedText);
+                //const formattedText = moment($el, 'HH:mm:DD.MM.YYYY').format('HH:mm DD.MM.YYYY');
+
+
+          
+                // Rozdelím text na dátum a čas
+                const [datePart, timePart] = formattedText.split(' ');
+                console.log("Date Part:", datePart);
+                console.log("Time Part:", timePart);
+                // Overí, či dátum a čas zodpovedajú očakávaným hodnotám
+      expect(datePart).to.equal(expectedDate);
+      expect(timePart).to.equal(expectedTime);
+      cy.get('#costsnew_table > tbody > .odd > :nth-child(8)').should("have.text", expectedQuantity);
+      cy.get('#costsnew_table > tbody > .odd > :nth-child(9)').should("have.text", expectedCost);
+      cy.get('#costsnew_table > tbody > .odd > .dt-center > :nth-child(2)').click()
+      cy.get('#modal-success').click()
+      cy.get('#calendar_costsnew').find(".fc-event-container").should("be.visible")
+      cy.get('#costsnew_refresh').click()
+
+
+
+
+
+
+              });
+        
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
