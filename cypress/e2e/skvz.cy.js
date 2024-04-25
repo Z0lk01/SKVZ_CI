@@ -191,7 +191,7 @@ it("Localization SK_1", () => {
         cy.get('#li-planner > [href="javascript:;"]').click()
         
 });
-it.only("Korekcie a tankovania", () => {
+it("Korekcie a tankovania", () => {
 const currentDate = new Date();
 const formattedTime = currentDate.toLocaleString('sk-SK', { 
         day: '2-digit', 
@@ -207,6 +207,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
 
         cy.get('#li-toolsmenu > [href="javascript:;"]').scrollIntoView().click()
         cy.get("#corrections").click()
+        cy.wait(6000)
         cy.get('#corrections_button_0').should("be.visible").click()
         cy.get('#edit_corrections_time').type("01:00")
         cy.get('#edit_corrections_tacho').type("112233")
@@ -214,8 +215,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
         cy.get('#search_grid_units_table_filter > label > input').type("942DE")
         cy.get('#search_grid_units_table > tbody > .odd > .fixed').should("have.text","IL 942DE").click()
         cy.get('#modal-success').click()
-        cy.wait(8000)
-        
+        cy.wait(9500)
         cy.get('#costsnew').scrollIntoView().click()
         cy.wait(4500)
         cy.get('#costsnew_button_0').click()
@@ -255,41 +255,82 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
       cy.get('#modal-success').click()
       cy.get('#calendar_costsnew').find(".fc-event-container").should("be.visible")
       cy.get('#costsnew_refresh').click()
+      cy.get('#service-books-v2').click()
+      cy.wait(5000)
+      cy.get('#filter_calendar_service_book_v2-helptext > .switchery').click()
+      cy.get('#filter_calendar_service_book_v2-helptext > .switchery').click()
+      cy.wait(9500)
+      cy.get('#service-books-v2_unit_filter-text').scrollIntoView(true) //pokus o scrollnutie aby test prebehol 
+      cy.get('#service-books-v2_unit_filter-text').should("be.visible").should("have.attr", "placeholder", "Všetky vozidlá...")
+      cy.get('#filter_centers_service_book_v2-component').should("be.visible")
+      cy.get('#filter_centers_service_book_v2-component :nth-child(2)').should("have.text", "Stredisko / Lokalita: VšetkyVšetky")
+      cy.get('#filter_service_books_last-checkbox > .form-label').should("have.text", "Filter na dátum podľa posledného servisu")
+      cy.get('#filter_service_books_next-checkbox > .form-label').should("have.text", "Filter na dátum podľa najbližšieho servisu")
+      cy.get('#service_books-date_from-component > .form-label > b').should("have.text", "Začiatok obdobia")
+      cy.get('#service_books-date_to-component > .form-label > b').should("have.text", "Koniec obdobia")
+      cy.get('#service_books-date_from_next-component > .form-label > b').should("have.text", "Začiatok obdobia")
+      cy.get('#service_books-date_to_next-component > .form-label > b').should("have.text", "Koniec obdobia")
+      cy.get('#service_books-product_type_filter-component > .form-label > b').should("have.text", "Servisný úkon")
+      cy.get('#add-service-books-v2_button_search').should("have.text", "Načítať dáta podľa zvolených kritérií")
+      cy.get('#add-service-books-v2_button_reset').should("have.text", "Reset")
+      cy.get('#service-books-v2_button_0').should("be.visible")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="6"]').should("have.text", "EČV")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="7"]').should("have.text", "Názov vozidla")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="9"]').should("have.text", "Posledný servis")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="10"]').should("have.text", "Dátum najbližšieho servisu")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="11"]').should("have.text", "Vykonať servis pri (km)")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="12"]').should("have.text", "Miesto")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="13"]').should("have.text", "Servisný úkon")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="14"]').should("have.text", "Množstvo")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="15"]').should("have.text", "Cena bez DPH")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="16"]').should("have.text", "Cena s DPH")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="18"]').should("have.text", "Zákazník")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="19"]').should("have.text", "Spárované s nákladom")
+      cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > .sorting_desc').should("have.text", "Vytvorené")
+      cy.get('#service-books-v2_button_0').click()
+      cy.get('#edit_service_books_unit').click()
+      cy.get('#search_grid_units_table_filter > label > input').type("IL 942DE")
+      cy.get('#search_grid_units_table > tbody > .odd > .fixed').click()
+      cy.get('#edit_service_books_time').type("01:00")
+      cy.get('#service_books-settings-tab-2_link').click()
+      cy.get("#select2-edit_service_books_modules_products-container").type("brzdy")
+      cy.get("#select2-edit_service_books_modules_products-results").click()
+      cy.get('#modal-success').click()
+      cy.get('#service-books-v2_table > tbody > :nth-child(1) > :nth-child(3)').should("be.visible").should("have.text", "IL 942DE")
+      cy.get('#service-books-v2_table > tbody > :nth-child(1) > :nth-child(4)').should("be.visible").should("have.text", "Opel Insignia")
+      cy.get('#service-books-v2_table > tbody > :nth-child(1) > :nth-child(5)').then(($el) => {
+        // Získa text z poľa
+        const formattedText = $el.text()
+        console.log("Formatted Text:", formattedText);
+        //const formattedText = moment($el, 'HH:mm:DD.MM.YYYY').format('HH:mm DD.MM.YYYY');
 
 
-
-
-
-
-              });
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-});
-it("Localization SK_2", () => {
-        cy.get('#li-drivebooksmenu > [href="javascript:;"]').should("be.visible")
-        .should("have.text", "Jazdy").click()
-        cy.wait(1500)
-        cy.get("#main-menu-wrapper > .ps-scrollbar-y-rail > .ps-scrollbar-y").click()
-      
   
+        // Rozdelím text na dátum a čas
+        const [datePart, timePart] = formattedText.split(' ');
+        console.log("Date Part:", datePart);
+        console.log("Time Part:", timePart);
+        // Overí, či dátum a čas zodpovedajú očakávaným hodnotám
+expect(datePart).to.equal(expectedDate);
+expect(timePart).to.equal(expectedTime);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 });
-
+});
+});
 });
