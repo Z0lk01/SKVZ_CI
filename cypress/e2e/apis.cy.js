@@ -19,6 +19,10 @@ describe('Test TSS', () => {
         });
         
         it("Localization SK_2", () => {
+        cy.get('#li-online-menu > [href="javascript:;"] > .title').should("be.visible") .click()
+        cy.get('#gps_units_online_new').should("be.visible")
+        .should("have.text", "Dispečer 2").click()
+        
 
 
         

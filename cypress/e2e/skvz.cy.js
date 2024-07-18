@@ -11,7 +11,7 @@ describe('Test TSS', () => {
         cy
         .clearLocalStorage()
         cy
-        .visit("http://tssmonitoring.test.gps.local/login")
+        .visit("https://support.tssmonitoring.sk/login")
         cy.get('#user_login') 
         .type("mzilka:mza")
         cy.get('#user_pass')
@@ -120,6 +120,7 @@ it("Localization SK_1", () => {
         .should("have.text", "Účel jazdy")
         cy.get('#driveconditionsnew').should("be.visible")
         .should("have.text", "Pravidlá pre jazdy")
+        cy.get('#motohours').scrollIntoView()
         cy.get('#motohours').should("be.visible")
         .should("have.text", "Motohodiny")
         cy.get('#fuel-analyses').should("be.visible")
@@ -260,7 +261,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
       cy.get('#filter_calendar_service_book_v2-helptext > .switchery').click()
       cy.get('#filter_calendar_service_book_v2-helptext > .switchery').click()
       cy.wait(9500)
-      cy.get('#service-books-v2_unit_filter-text').scrollIntoView(true) //pokus o scrollnutie aby test prebehol 
+      cy.get('#service-books-v2_unit_filter-text').scrollIntoView() //pokus o scrollnutie aby test prebehol 
       cy.get('#service-books-v2_unit_filter-text').should("be.visible").should("have.attr", "placeholder", "Všetky vozidlá...")
       cy.get('#filter_centers_service_book_v2-component').should("be.visible")
       cy.get('#filter_centers_service_book_v2-component :nth-child(2)').should("have.text", "Stredisko / Lokalita: VšetkyVšetky")
