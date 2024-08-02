@@ -9,7 +9,7 @@ describe('Test TSS', () => {
         cy
         .visit("https://support.tssmonitoring.sk/login")
         cy.get('#user_login') 
-        .type("mzilka:mza")
+        .type("mmza")
         cy.get('#user_pass')
         .type("alkoholik")
         cy.get("#wp-submit") .click()
@@ -19,7 +19,7 @@ describe('Test TSS', () => {
         });
         
         it("Component 1", () => {
-        cy.get()
+        cy.get("#main_menu_search_div").should("be.visible")
     
         
 
