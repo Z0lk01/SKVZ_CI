@@ -41,7 +41,7 @@ describe('Test TSS', () => {
          .get('#units-online-search')
          .should("have.attr" , "placeholder", "Hľadať vozidlo / osobu")
          .type("942DE")
-         
+
        
 
        

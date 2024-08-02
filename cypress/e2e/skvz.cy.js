@@ -62,22 +62,23 @@ it("Localization SK_1", () => {
         cy.get("#usernew").should("be.visible")
         .should("have.text","Užívatelia newVytvoriť užívateľa")
         cy.get('#li-object > [href="javascript:;"]').click()
-        cy.get('#li-rentcar > [href="javascript:;"]').should("be.visible")
-        .should("have.text","Rezervačný systém").click()
-        cy.get('#rent_cars_prepare_v2 > .title').should("be.visible")
-        .should("have.text", "Autopožičovňa - priprave...")
-        cy.get('#rent_cars_requests_for_me_v2 > .title').should("be.visible")
-        .should("have.text", "Autopožičovňa - schvaľov...")
-        cy.get('#busportals > .title').should("be.visible")
-        .should("have.text", "Autobusy rezervácie")
-        cy.get('#rent-cars-reports > .title').should("be.visible")
-        .should("have.text", "Autopožičovňa reporty")
-        cy.get('#rent_cars_my_requests_v2 > .title').should("be.visible")
-        .should("have.text", "Autopožičovňa - moje žia...")
-        cy.get('#rent_cars_v2').should("be.visible")
-        .should("have.text", "Autopožičovňa")
-        cy.get('#taxiportals').should("be.visible")
-        .should("have.text", "Taxislužba")
+        cy.get(selectors.liRentCar).should("be.visible")
+            .should("have.text", "Rezervačný systém").click();
+        
+        cy.get(selectors.rentCarsPrepare).should("be.visible")
+            .should("have.text", "Autopožičovňa - priprave...");
+        cy.get(selectors.rentCarsRequests).should("be.visible")
+            .should("have.text", "Autopožičovňa - schvaľov...");
+        cy.get(selectors.busPortals).should("be.visible")
+            .should("have.text", "Autobusy rezervácie");
+        cy.get(selectors.rentCarsReports).should("be.visible")
+            .should("have.text", "Autopožičovňa reporty");
+        cy.get(selectors.rentCarsMyRequests).should("be.visible")
+            .should("have.text", "Autopožičovňa - moje žia...");
+        cy.get(selectors.rentCars).should("be.visible")
+            .should("have.text", "Autopožičovňa");
+        cy.get(selectors.taxiPortals).should("be.visible")
+            .should("have.text", "Taxislužba");
         cy.get('#li-rentcar > [href="javascript:;"]').click()
         cy.get('#li-settings > [href="javascript:;"]').should("be.visible")
         .should("have.text", "Nastavenia").click()
