@@ -19,6 +19,7 @@ describe('Test TSS', () => {
         });
         
         it("Component 1", () => {
+        cy.get()
     
         
 
