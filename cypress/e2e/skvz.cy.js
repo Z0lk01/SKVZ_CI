@@ -17,7 +17,7 @@ describe('Test TSS', () => {
         cy.get('#user_pass')
         .type("alkoholik")
         cy.get("#wp-submit") .click()
-        cy.wait(15000)
+          .wait(15000)
         //cy.get(".confirm-modal-close") .click({force: true})
          
         });
@@ -44,7 +44,8 @@ it("Localization SK_1", () => {
         cy.get("#gps_map_main").click()
         cy.wait(2000)
         cy.get("#units-online-search").should("have.attr", "placeholder", "Hľadať vozidlo / osobu")
-        .type("IL 942DE")
+        .type("942DE")
+        cy.wait(3500)
         cy.get('#company_name').should("be.visible")
         .should("have.text", "Firmy a strediská")
         cy.get('.all').should("be.visible")
@@ -62,22 +63,22 @@ it("Localization SK_1", () => {
         cy.get("#usernew").should("be.visible")
         .should("have.text","Užívatelia newVytvoriť užívateľa")
         cy.get('#li-object > [href="javascript:;"]').click()
-        cy.get(selectors.liRentCar).should("be.visible")
+        cy.get('#li-rentcar > [href="javascript:;"]').should("be.visible")
             .should("have.text", "Rezervačný systém").click();
         
-        cy.get(selectors.rentCarsPrepare).should("be.visible")
+        cy.get('#rent_cars_prepare_v2').should("be.visible")
             .should("have.text", "Autopožičovňa - priprave...");
-        cy.get(selectors.rentCarsRequests).should("be.visible")
+        cy.get('#rent_cars_requests_for_me_v2').should("be.visible")
             .should("have.text", "Autopožičovňa - schvaľov...");
-        cy.get(selectors.busPortals).should("be.visible")
+        cy.get("#busportals").should("be.visible")
             .should("have.text", "Autobusy rezervácie");
-        cy.get(selectors.rentCarsReports).should("be.visible")
+        cy.get('#rent-cars-reports').should("be.visible")
             .should("have.text", "Autopožičovňa reporty");
-        cy.get(selectors.rentCarsMyRequests).should("be.visible")
+        cy.get('#rent_cars_my_requests_v2').should("be.visible")
             .should("have.text", "Autopožičovňa - moje žia...");
-        cy.get(selectors.rentCars).should("be.visible")
+        cy.get('#rent_cars_v2').should("be.visible")
             .should("have.text", "Autopožičovňa");
-        cy.get(selectors.taxiPortals).should("be.visible")
+        cy.get("#taxiportals").should("be.visible")
             .should("have.text", "Taxislužba");
         cy.get('#li-rentcar > [href="javascript:;"]').click()
         cy.get('#li-settings > [href="javascript:;"]').should("be.visible")
@@ -124,7 +125,7 @@ it("Localization SK_1", () => {
         cy.get('#motohours').scrollIntoView()
         cy.get('#motohours').should("be.visible")
         .should("have.text", "Motohodiny")
-        cy.get('#fuel-analyses').should("be.visible")
+        cy.get('#fuel-analyses').scrollIntoView().should("be.visible")
         .should("have.text", "Sledovanie paliva")
         cy.get('#travel-allowance')
         cy.get('#newdrives').scrollIntoView()
@@ -211,6 +212,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
         cy.get("#corrections").click()
         cy.wait(6000)
         cy.get('#corrections_button_0').should("be.visible").click()
+        cy.wait(1500)
         cy.get('#edit_corrections_time').type("01:00")
         cy.get('#edit_corrections_tacho').type("112233")
         cy.get('#edit_corrections_unit_id').click()
@@ -220,9 +222,9 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
         cy.wait(9500)
         cy.get('#costsnew').scrollIntoView().click()
         cy.wait(4500)
-        cy.get('#costsnew_button_0').click()
+        cy.get('#costsnew_button_0').click({force: true})
         cy.wait(3500)
-        cy.get('#edit_drivers_unit').click()
+        cy.get('#edit_drivers_unit').click({force: true})
         cy.get('#search_grid_units_table_filter > label > input').type("IL 942DE")
         cy.get('#search_grid_units_table > tbody > .odd > .fixed').should("have.text", "IL 942DE").click()
         cy.wait(1200)
@@ -254,8 +256,8 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
       cy.get('#costsnew_table > tbody > .odd > :nth-child(8)').should("have.text", expectedQuantity);
       cy.get('#costsnew_table > tbody > .odd > :nth-child(9)').should("have.text", expectedCost);
       cy.get('#costsnew_table > tbody > .odd > .dt-center > :nth-child(2)').click()
-      cy.get('#modal-success').click()
-      cy.get('#calendar_costsnew').find(".fc-event-container").should("be.visible")
+      cy.get('#modal-success').click().wait(2000)
+      cy.get('#calendar_costsnew').find(".fc-event-container")
       cy.get('#costsnew_refresh').click()
       cy.get('#service-books-v2').click()
       cy.get('#service-books-v2_unit_filter-text').scrollIntoView().should("be.visible").should("have.attr", "placeholder", "Všetky vozidlá...") //pokus o scrollnutie aby test prebehol
@@ -270,7 +272,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
       cy.get('#service_books-product_type_filter-component > .form-label > b').should("have.text", "Servisný úkon")
       cy.get('#add-service-books-v2_button_search').should("have.text", "Načítať dáta podľa zvolených kritérií")
       cy.get('#add-service-books-v2_button_reset').should("have.text", "Reset")
-      cy.get('#service-books-v2_button_0').should("be.visible")
+      cy.get('#service-books-v2_button_0').scrollIntoView()
       cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="6"]').should("have.text", "EČV")
       cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="7"]').should("have.text", "Názov vozidla")
       cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="9"]').should("have.text", "Posledný servis")

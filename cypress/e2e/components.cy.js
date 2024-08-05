@@ -41,6 +41,26 @@ describe('Test TSS', () => {
          .get('#units-online-search')
          .should("have.attr" , "placeholder", "Hľadať vozidlo / osobu")
          .type("942DE")
+         cy.intercept({
+            method: 'POST',
+            url: "https://support.tssmonitoring.sk/api/v1.3/onlines/index.json?f=onlines_index&callback=jQuery*"
+             }).as("apiRequest")
+        cy.get('.away > b').click()
+        cy.wait('@apiRequest').then((interception) => {
+                assert.isNotNull(interception.response.body, 'API response is not null')
+                expect(interception.response.statusCode).to.equal(200);
+        cy.get('#units-drives-calendar-toggle > .fa-calendar').should("be.visible").click()
+        cy.get('#units-drives-calendar-toggle-datepicker-calendar-parent > .daterangepicker').should("be.visible")
+        cy.get('#units-drives-calendar-toggle-datepicker-calendar-parent > .daterangepicker').should("be.visible")
+        cy.get('.left > .calendar-table > .table-condensed > thead > :nth-child(1) > .month > .monthselect').select(7).should("have.value", "7")
+        cy.get("#units-online-title").should("be.visible").should("have.text", "Späť na všetky vozidlá").should("have.css","background-color", "rgb(233, 30, 99)")
+        
+        
+
+
+
+
+
 
        
 
@@ -50,5 +70,6 @@ describe('Test TSS', () => {
             
 
 
-    });
+     });
+ });
 });
