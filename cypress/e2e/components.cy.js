@@ -54,10 +54,35 @@ describe('Test TSS', () => {
         cy.get('#units-drives-calendar-toggle-datepicker-calendar-parent > .daterangepicker').should("be.visible")
         cy.get('.left > .calendar-table > .table-condensed > thead > :nth-child(1) > .month > .monthselect').select(7).should("have.value", "7")
         cy.get("#units-online-title").should("be.visible").should("have.text", "Späť na všetky vozidlá").should("have.css","background-color", "rgb(233, 30, 99)")
-        
-        
-
-
+        cy.intercept({
+            method: 'POST',
+            url: "https://maps.googleapis.com/$rpc/google.internal.maps.mapsjs.v1.MapsJsInternalService/GetViewportInfo"
+             }).as("apiRequest")
+        cy.get("#units-online-title").click()
+            cy.wait('@apiRequest').then((interception) => {
+               assert.isNotNull(interception.response.body, 'API response is not null')
+               expect(interception.response.statusCode).to.equal(200);
+            cy.intercept({
+                method: 'POST',
+                url: "https://support.tssmonitoring.sk/api/v1.3/userGrids/read.json?f=userGrids_read&callback=jQuery*"
+                }).as("apiRequest")
+                 cy.get('#gps_units_online_new').click()
+            cy.wait('@apiRequest').then((interception) => {
+                    assert.isNotNull(interception.response.body, 'API response is not null')
+                    expect(interception.response.statusCode).to.equal(200); 
+        cy.get('#gps_units_online_new_main_button_refresh').then($el => {
+                    const outerText = $el[0].outerText;
+                    expect(outerText).to.equal(" Obnoviť")
+        cy.get('#gps_units_online_new_filter_IGN').children().should("have.length", "4")
+        cy.get("#gps_units_online_new_filter_inspections").children().should("have.length", "5")
+            cy.intercept({
+            method: 'POST',
+            url: "https://support.tssmonitoring.sk/api/v1.3/userNotificationAlerts/getList.json?f=userNotificationAlerts_getList&callback=jQuery*"
+            }).as("apiRequest")
+        cy.get('#gps_units_online_new_full_screen_btn').click()
+             cy.wait('@apiRequest').then((interception) => {
+                    assert.isNotNull(interception.response.body, 'API response is not null')
+                    expect(interception.response.statusCode).to.equal(200); 
 
 
 
@@ -67,9 +92,23 @@ describe('Test TSS', () => {
        
 
           
-            
 
 
+
+
+
+
+
+
+
+
+
+
+
+                });
+               });
+            });
+        });
      });
- });
+  });
 });
