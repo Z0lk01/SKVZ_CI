@@ -82,10 +82,37 @@ describe('Test TSS', () => {
         cy.get('#gps_units_online_new_full_screen_btn').click()
              cy.wait('@apiRequest').then((interception) => {
                     assert.isNotNull(interception.response.body, 'API response is not null')
-                    expect(interception.response.statusCode).to.equal(200); 
-
-
-
+                    expect(interception.response.statusCode).to.equal(200);
+        cy.get('#gps_units_online_new_columns').then($el => {
+                        const outerText = $el[0].outerText;
+                        expect(outerText).to.equal(" Vyp./Zap. stĺpce").click()
+        
+        cy.get('#gps_units_online_new_column_chooser_ul_left > :nth-child(6) > label > .switchery')
+        cy.get('#gps_units_online_new_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table').should("be.visible")
+        cy.get('#gps_units_online_new_table_wrapper')
+        
+        cy.get('.gps_units_online_new_input_name_column > #gps_units_online_new_name_input').should("be.visible").type("942DE")
+        cy.get('[style="font-weight: 500;color: #777;font-size: 11px;line-height: 10px;display: block; width: max-content; margin-right: 5px;"]').click({force: true})
+            cy.intercept({
+            method: 'POST',
+            url: "https://support.tssmonitoring.sk/api/v1.3/onlines/geocode.json?f=onlines_geocode&callback=jQuery*"
+            }).as("apiRequest")
+            cy.get('.gps_units_online_new_table_address_column > .switchery').click()
+             cy.wait('@apiRequest').then((interception) => {
+                    assert.isNotNull(interception.response.body, 'API response is not null')
+                    expect(interception.response.statusCode).to.equal(200);
+            cy.get('.gps_units_online_new_table_address_column > .switchery').click()
+            cy.get('.gps_units_online_new_table_address_column > .switchery').should("be.visible").should("have.attr", "data-switchery", "false")
+            cy.intercept({
+                method: 'POST',
+            url: "https://support.tssmonitoring.sk/api/v1.3/onlines/geocode.json?f=onlines_geocode&callback=jQuery*"
+            }).as("apiRequest")
+                }).as("apiRequest")
+            
+                cy.get("#li-object").should("be.visible").click()
+                cy.wait('@apiRequest').then((interception) => {
+                assert.isNotNull(interception.response.body, 'API response is not null')
+                expect(interception.response.statusCode).to.equal(200);
 
        
 
@@ -103,8 +130,8 @@ describe('Test TSS', () => {
 
 
 
-
-
+                });
+                });
                 });
                });
             });
