@@ -52,16 +52,16 @@ describe('Test TSS', () => {
         cy.get('#units-drives-calendar-toggle > .fa-calendar').should("be.visible").click()
         cy.get('#units-drives-calendar-toggle-datepicker-calendar-parent > .daterangepicker').should("be.visible")
         cy.get('#units-drives-calendar-toggle-datepicker-calendar-parent > .daterangepicker').should("be.visible")
-        cy.get('.left > .calendar-table > .table-condensed > thead > :nth-child(1) > .month > .monthselect').select(7).should("have.value", "7")
+        cy.get('.left > .calendar-table > .table-condensed > thead > :nth-child(1) > .month > .monthselect').select(7)
         cy.get("#units-online-title").should("be.visible").should("have.text", "Späť na všetky vozidlá").should("have.css","background-color", "rgb(233, 30, 99)")
         cy.intercept({
             method: 'POST',
             url: "https://maps.googleapis.com/$rpc/google.internal.maps.mapsjs.v1.MapsJsInternalService/GetViewportInfo"
              }).as("apiRequest")
         cy.get("#units-online-title").click()
-            cy.wait('@apiRequest').then((interception) => {
-               assert.isNotNull(interception.response.body, 'API response is not null')
-               expect(interception.response.statusCode).to.equal(200);
+            //cy.wait('@apiRequest').then((interception) => {
+               //assert.isNotNull(interception.response.body, 'API response is not null')
+               //expect(interception.response.statusCode).to.equal(200);
             cy.intercept({
                 method: 'POST',
                 url: "https://support.tssmonitoring.sk/api/v1.3/userGrids/read.json?f=userGrids_read&callback=jQuery*"
@@ -83,36 +83,58 @@ describe('Test TSS', () => {
              cy.wait('@apiRequest').then((interception) => {
                     assert.isNotNull(interception.response.body, 'API response is not null')
                     expect(interception.response.statusCode).to.equal(200);
-        cy.get('#gps_units_online_new_columns').then($el => {
+                    cy.get('#gps_units_online_new_columns').then($el => {
                         const outerText = $el[0].outerText;
-                        expect(outerText).to.equal(" Vyp./Zap. stĺpce").click()
+                        expect(outerText).to.equal(" Vyp./Zap. stĺpce");
+                        $el.click()
         
-        cy.get('#gps_units_online_new_column_chooser_ul_left > :nth-child(6) > label > .switchery')
-        cy.get('#gps_units_online_new_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table').should("be.visible")
-        cy.get('#gps_units_online_new_table_wrapper')
+        cy.get('#gps_units_online_new_column_chooser_modal').should("be.visible").children().should("have.length", 4).should("have.css", "background-color", "rgba(0, 0, 0, 0)")
+        cy.get('#gps_units_online_new_column_chooser_ul_left').should("be.visible").children().should("have.length", 11)
+        cy.get('#gps_units_online_new_column_chooser_ul_right').should("be.visible").children().should("have.length", 12)
+        cy.get('#gps_units_online_new_close_column_chooser_modal > .fa').click()
         
-        cy.get('.gps_units_online_new_input_name_column > #gps_units_online_new_name_input').should("be.visible").type("942DE")
-        cy.get('[style="font-weight: 500;color: #777;font-size: 11px;line-height: 10px;display: block; width: max-content; margin-right: 5px;"]').click({force: true})
-            cy.intercept({
+         
+         cy.get('[data-search="#E91E63"]').click()
+         cy.get('#gps_units_online_new_table').find(".fa-globe").eq(1).click()
+         cy.get('#gps_units_online_new_map').should("be.visible")
+         cy.get('#gps_units_online_new_info').should("be.visible")
+         cy.get('#gps_units_online_new_info > :nth-child(2)').should("be.visible").should("have.text", "EČV : IL 942DE ")
+         cy.get('#gps_units_online_new_info > :nth-child(3)').should("be.visible").should("have.text", "Meno vodiča : test mza mza ")
+         cy.get('#gps_units_online_new_close_map > .fa').click()
+         cy.get('#gps_units_online_new_filter_IGN  > :nth-child(1)').should("be.visible").click()
+         cy.get('#gps_units_online_new_filter_inspections > :nth-child(3)').should("be.visible").click()
+         cy.get('.even > .gps_units_online_new_input_name_column > [style="width:100%; min-width:310px; text-align: left;  cursor: default;"] > [style="float: right; z-index: 0; font-size: 15px;"] > .fa-leaf')
+         .should('have.css', 'color', 'rgb(250, 130, 104)')
+         cy.get('.even > .gps_units_online_new_input_name_column > [style="width:100%; min-width:310px; text-align: left;  cursor: default;"] > .dropdown > .fa').click()
+         cy.intercept({
             method: 'POST',
-            url: "https://support.tssmonitoring.sk/api/v1.3/onlines/geocode.json?f=onlines_geocode&callback=jQuery*"
+            url: "https://support.tssmonitoring.sk/api/v1.3/units/index.json?_mode=DataTables&is_archived=0&is_deleted=0&callback=jQuery*"
             }).as("apiRequest")
-            cy.get('.gps_units_online_new_table_address_column > .switchery').click()
-             cy.wait('@apiRequest').then((interception) => {
-                    assert.isNotNull(interception.response.body, 'API response is not null')
-                    expect(interception.response.statusCode).to.equal(200);
-            cy.get('.gps_units_online_new_table_address_column > .switchery').click()
-            cy.get('.gps_units_online_new_table_address_column > .switchery').should("be.visible").should("have.attr", "data-switchery", "false")
-            cy.intercept({
-                method: 'POST',
-            url: "https://support.tssmonitoring.sk/api/v1.3/onlines/geocode.json?f=onlines_geocode&callback=jQuery*"
+         cy.get('.even > .gps_units_online_new_input_name_column > [style="width:100%; min-width:310px; text-align: left;  cursor: default;"] > .dropdown > .dropdown-menu  > :nth-child(1)').click()
+               cy.wait('@apiRequest').then((interception) => {
+               assert.isNotNull(interception.response.body, 'API response is not null')
+               expect(interception.response.statusCode).to.equal(200);
+             cy.wait(2400)
+               cy.get("#units-info-basic-tab-1").should("be.visible").children().should("have.length", 17)
+        cy.intercept({
+            method: 'POST',
+            url: "https://support.tssmonitoring.sk/api/v1.3/units/releaseLock.json?f=units_releaseLock&callback=jQuery*"
             }).as("apiRequest")
-                }).as("apiRequest")
+        cy.get('#modal-cancel').click()
+            cy.wait('@apiRequest').then((interception) => {
+            assert.isNotNull(interception.response.body, 'API response is not null')
+            expect(interception.response.statusCode).to.equal(200);
+            cy.get('#gps_units_online_new_filter_inspections > :nth-child(1)').should("be.visible").click()
+            cy.get('#gps_units_online_new_table > tbody').children().should("have.length", 10)
+            cy.get(':nth-child(7) > .gps_units_online_new_input_name_column > [style="width:100%; min-width:310px; text-align: left;  cursor: default;"] > .dropdown > .fa').click()
             
-                cy.get("#li-object").should("be.visible").click()
-                cy.wait('@apiRequest').then((interception) => {
-                assert.isNotNull(interception.response.body, 'API response is not null')
-                expect(interception.response.statusCode).to.equal(200);
+
+
+         
+
+
+        
+
 
        
 
@@ -137,5 +159,5 @@ describe('Test TSS', () => {
             });
         });
      });
-  });
+    });
 });

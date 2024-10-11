@@ -4,7 +4,7 @@ module.exports = {
   projectId: 'x8ghag',
   env: {
     username: "mza",
-    password: "alkoholik",
+    password: ".",
   },
 
   e2e: {
