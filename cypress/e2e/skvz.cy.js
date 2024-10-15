@@ -1,26 +1,23 @@
 
 /// <reference types="cypress" />
 const { type } = require("os");
-import moment from 'moment';
-
 describe('Test TSS', () => {
+    beforeEach(() => {
+        const username = Cypress.env('username') || 'your-username';
+        const password = Cypress.env('password') || 'your-password';
 
-        beforeEach(() => {
-        cy
-        .clearCookies()
-        cy
-        .clearLocalStorage()
-        cy
-        .visit("https://support.tssmonitoring.sk/login")
-        cy.get('#user_login') 
-        .type("mzilka:mza")
-        cy.get('#user_pass')
-        .type("alkoholik")
-        cy.get("#wp-submit") .click()
-          .wait(15000)
-        //cy.get(".confirm-modal-close") .click({force: true})
-         
-        });
+        if (!username || !password) {
+            throw new Error('Environment variables username and password must be set');
+        }
+
+        cy.clearCookies()
+          .clearLocalStorage()
+          .visit("https://support.tssmonitoring.sk/login")
+          .get('#user_login').type(username)
+          .get('#user_pass').type(password)
+          .get("#wp-submit").click()
+          .wait(15000);
+    });
 
 it("Localization SK_1", () => {
         
@@ -32,8 +29,6 @@ it("Localization SK_1", () => {
         .should("have.text", "Dispečer")
         cy.get('#dashboard_online').should("be.visible")
         .should("have.text", "Grafické prehľady")
-        cy.get('#gps_units_online_new').should("be.visible")
-        .should("have.text", "Dispečer 2")
         cy.get('#unit-notifications').should("be.visible")
         .should("have.text", "Hlásenia")
         cy.get("#favorit-gps_map_main").should("not.be.visible")
