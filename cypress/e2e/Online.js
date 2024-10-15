@@ -19,6 +19,16 @@ describe('Test TSS', () => {
     });
         
     it("Component 1", () => {
+        cy.get('body').then($body => {
+            if ($body.find('#id_news_users_modal_content').length > 0) {
+                // element existuje urobím assertion a odkliknem novinky
+                cy.get('#id_news_users_modal_content').should('be.visible');
+                cy.get('.confirm-modal-close').click();
+            } else {
+                // element sa na stránke nenachádza , test pokračuje ďalej 
+                cy.log('#id_news_users_modal_content');
+            }
+        });
         cy.get("#main_menu_search")
           .should("be.visible")
           .should("have.attr", "placeholder", "Vyhľadávanie")   
@@ -127,7 +137,7 @@ describe('Test TSS', () => {
             cy.get('#gps_units_online_new_filter_inspections > :nth-child(1)').should("be.visible").click()
             cy.get('#gps_units_online_new_table > tbody').children().should("have.length", 10)
             cy.get(':nth-child(7) > .gps_units_online_new_input_name_column > [style="width:100%; min-width:310px; text-align: left;  cursor: default;"] > .dropdown > .fa').click()
-            
+
 
 
          
