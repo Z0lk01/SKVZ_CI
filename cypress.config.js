@@ -1,7 +1,7 @@
 const { defineConfig } = require("cypress");
 
 module.exports = {
-  projectId: 'x8ghag',
+  projectId: 'xx58n5',
   env: {
     username: "mza",
     password: ".",
