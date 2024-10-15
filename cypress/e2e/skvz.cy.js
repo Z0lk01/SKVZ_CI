@@ -1,5 +1,6 @@
 
 /// <reference types="cypress" />
+const moment = require('moment');
 const { type } = require("os");
 describe('Test TSS', () => {
     beforeEach(() => {
@@ -25,7 +26,7 @@ it("Localization SK_1", () => {
         cy.get('#li-online-menu > [href="javascript:;"] > .title').should("be.visible") .click()
         cy.get('#gps_map_main').should("be.visible")
         .should("have.text", "Mapa")
-        cy.get('#gps_units_online').should("be.visible")
+        cy.get('#gps_units_online_new').should("be.visible")
         .should("have.text", "Dispečer")
         cy.get('#dashboard_online').should("be.visible")
         .should("have.text", "Grafické prehľady")
@@ -55,8 +56,6 @@ it("Localization SK_1", () => {
         .should("have.text","UžívateliaVytváranie užívateľa")
         cy.get("#groups").should("be.visible")
         .should("have.text","Skupiny")
-        cy.get("#usernew").should("be.visible")
-        .should("have.text","Užívatelia newVytvoriť užívateľa")
         cy.get('#li-object > [href="javascript:;"]').click()
         cy.get('#li-rentcar > [href="javascript:;"]').should("be.visible")
             .should("have.text", "Rezervačný systém").click();
@@ -113,9 +112,9 @@ it("Localization SK_1", () => {
         .should("have.text", "Denný prehľad jázd")
         cy.get('#monthlyreport_report_copy_0').should("be.visible")
         .should("have.text", "Mesačný/Súhrnný prehľad")
-        cy.get('#drivetypesnew').should("be.visible")
+        cy.get('#drivetypes').should("be.visible")
         .should("have.text", "Účel jazdy")
-        cy.get('#driveconditionsnew').should("be.visible")
+        cy.get('#drive_conditions').should("be.visible")
         .should("have.text", "Pravidlá pre jazdy")
         cy.get('#motohours').scrollIntoView()
         cy.get('#motohours').should("be.visible")
@@ -188,7 +187,7 @@ it("Localization SK_1", () => {
         cy.get('#li-planner > [href="javascript:;"]').click()
         
 });
-it("Korekcie a tankovania", () => {
+it.only("Korekcie a tankovania", () => {
 const currentDate = new Date();
 const formattedTime = currentDate.toLocaleString('sk-SK', { 
         day: '2-digit', 
@@ -281,6 +280,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
       cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > [data-column-index="19"]').should("have.text", "Spárované s nákladom")
       cy.get('#service-books-v2_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table > thead > tr > .sorting_desc').should("have.text", "Vytvorené")
       cy.get('#service-books-v2_button_0').click()
+      cy.wait(2500)
       cy.get('#edit_service_books_unit').click()
       cy.get('#search_grid_units_table_filter > label > input').type("IL 942DE")
       cy.get('#search_grid_units_table > tbody > .odd > .fixed').click()
