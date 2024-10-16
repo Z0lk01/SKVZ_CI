@@ -124,7 +124,7 @@ describe('Test TSS', () => {
                cy.wait('@apiRequest').then((interception) => {
                assert.isNotNull(interception.response.body, 'API response is not null')
                expect(interception.response.statusCode).to.equal(200);
-             cy.wait(2400)
+             cy.wait(3400)
                cy.get("#units-info-basic-tab-1").should("be.visible").children().should("have.length", 17)
         cy.intercept({
             method: 'POST',
@@ -137,6 +137,15 @@ describe('Test TSS', () => {
             cy.get('#gps_units_online_new_filter_inspections > :nth-child(1)').should("be.visible").click()
             cy.get('#gps_units_online_new_table > tbody').children().should("have.length", 10)
             cy.get(':nth-child(7) > .gps_units_online_new_input_name_column > [style="width:100%; min-width:310px; text-align: left;  cursor: default;"] > .dropdown > .fa').click()
+            cy.intercept({
+                method: 'POST',
+                url: "https://support.tssmonitoring.sk/api/v1.3/UnitNotifications/index.json?_mode=DataTables&callback=jQuery*"
+                }).as("apiRequest")
+                cy.wait('@apiRequest').then((interception) => {
+                    assert.isNotNull(interception.response.body, 'API response is not null')
+                    expect(interception.response.statusCode).to.equal(200);
+            cy.get('#unit-notifications').click()
+            //cy.get('#unit-notifications_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table').should("be.visible")
 
 
 
@@ -170,4 +179,5 @@ describe('Test TSS', () => {
         });
      });
     });
+});
 });
