@@ -145,7 +145,17 @@ describe('Test TSS', () => {
                     assert.isNotNull(interception.response.body, 'API response is not null')
                     expect(interception.response.statusCode).to.equal(200);
             cy.get('#unit-notifications').click()
-            //cy.get('#unit-notifications_table_wrapper > .dataTables_scroll > .dataTables_scrollHead > .dataTables_scrollHeadInner > .table').should("be.visible")
+            cy.get("#unit-notifications_table_wrapper").children().should("have.length", 4)
+            cy.intercept({
+                method: 'POST',
+                url: "https://support.tssmonitoring.sk/api/v1.3/UnitNotifications/read/8374128.json?f=UnitNotifications_read&callback=jQuery*"
+                }).as("apiRequest")
+            cy.get(".dt-center header-1 fixed").should("be.visible").click()
+            cy.wait('@apiRequest').then((interception) => {
+                assert.isNotNull(interception.response.body, 'API response is not null')
+                expect(interception.response.statusCode).to.equal(200);
+                cy.get("#add-modal-map-header-button-1729511006991").click();
+                
 
 
 
@@ -179,5 +189,6 @@ describe('Test TSS', () => {
         });
      });
     });
+});
 });
 });
