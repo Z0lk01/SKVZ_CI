@@ -8,6 +8,7 @@ module.exports = {
   },
 
   e2e: {
+    baseUrl: 'https://www.tssgroup.sk/moj-ucet',
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },

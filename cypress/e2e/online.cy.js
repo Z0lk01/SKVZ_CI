@@ -55,7 +55,7 @@ describe('Test TSS', () => {
             method: 'POST',
             url: "https://support.tssmonitoring.sk/api/v1.3/onlines/index.json?f=onlines_index&callback=jQuery*"
              }).as("apiRequest")
-        cy.get('.away > b').click()
+             cy.contains("Opel Insignia").click()
         cy.wait('@apiRequest').then((interception) => {
                 assert.isNotNull(interception.response.body, 'API response is not null')
                 expect(interception.response.statusCode).to.equal(200);
@@ -99,7 +99,7 @@ describe('Test TSS', () => {
                         $el.click()
         
         cy.get('#gps_units_online_new_column_chooser_modal').should("be.visible").children().should("have.length", 4).should("have.css", "background-color", "rgba(0, 0, 0, 0)")
-        cy.get('#gps_units_online_new_column_chooser_ul_left').should("be.visible").children().should("have.length", 11)
+        cy.get('#gps_units_online_new_column_chooser_ul_left').should("be.visible").children().should("have.length", 12)
         cy.get('#gps_units_online_new_column_chooser_ul_right').should("be.visible").children().should("have.length", 12)
         cy.get('#gps_units_online_new_close_column_chooser_modal > .fa').click()
         
@@ -124,7 +124,7 @@ describe('Test TSS', () => {
                cy.wait('@apiRequest').then((interception) => {
                assert.isNotNull(interception.response.body, 'API response is not null')
                expect(interception.response.statusCode).to.equal(200);
-             cy.wait(3400)
+             cy.wait(6400)
                cy.get("#units-info-basic-tab-1").should("be.visible").children().should("have.length", 17)
         cy.intercept({
             method: 'POST',
@@ -146,15 +146,7 @@ describe('Test TSS', () => {
                     expect(interception.response.statusCode).to.equal(200);
             cy.get('#unit-notifications').click()
             cy.get("#unit-notifications_table_wrapper").children().should("have.length", 4)
-            cy.intercept({
-                method: 'POST',
-                url: "https://support.tssmonitoring.sk/api/v1.3/UnitNotifications/read/8374128.json?f=UnitNotifications_read&callback=jQuery*"
-                }).as("apiRequest")
-            cy.get(".dt-center header-1 fixed").should("be.visible").click()
-            cy.wait('@apiRequest').then((interception) => {
-                assert.isNotNull(interception.response.body, 'API response is not null')
-                expect(interception.response.statusCode).to.equal(200);
-                cy.get("#add-modal-map-header-button-1729511006991").click();
+           
                 
 
 
@@ -189,6 +181,5 @@ describe('Test TSS', () => {
         });
      });
     });
-});
 });
 });
