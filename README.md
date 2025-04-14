@@ -1,97 +1,127 @@
+
 # SKVZ_CI
 
-This repository contains automated end-to-end (E2E) tests for the SKVZ application using Cypress. The tests are designed to verify the functionality of various components and workflows within the application, ensuring that the system behaves as expected.
+> EN This README contains both English and Slovak versions.  
+> 🇸🇰 Tento README obsahuje anglickú aj slovenskú verziu.
 
-## Project Structure
+---
 
-### Key Files and Directories
+## EN English Version
 
-- **`cypress/e2e/`**: Contains the test files for different functionalities.
-  - `Test TSS group stranka.cy.js`: Tests for the TSS Group page, including login and navigation.
-  - `skvz.cy.js`: Tests for corrections, fuel management, and service book functionalities.
-  - `online.cy.js`: Tests for online vehicle tracking and related features.
-- **`cypress/support/commands.js`**: Placeholder for custom Cypress commands (currently empty).
-- **`cypress/support/e2e.js`**: Contains global configurations, such as handling uncaught exceptions.
-- **`cypress/fixtures/example.json`**: Example fixture file for mocking data.
-- **`cypress.config.js`**: Cypress configuration file, including environment variables and base URL.
-- **`.circleci/config.yml`**: CircleCI configuration for continuous integration and test automation.
-- **`cypress.yml`**: GitHub Actions configuration for running Cypress tests in parallel.
-- **`package.json`**: Contains project dependencies and scripts for running tests.
+This repository contains automated end-to-end (E2E) tests for the SKVZ application using Cypress. The tests are designed to verify the functionality of various components and workflows within the application, ensuring the system behaves as expected.
 
-## Tests Overview
+###  Project Structure
 
-### `Test TSS group stranka.cy.js`
-This test file focuses on verifying the functionality of the TSS Group page:
-- **Login Workflow**: Tests the login process and verifies redirection to the correct page.
-- **Navigation Assertions**: Ensures that navigation links and elements are visible and have the correct text.
-- **Localization Checks**: Verifies that the UI elements display the correct localized text.
+Key Files and Directories:
 
-### `skvz.cy.js`
-This test file covers the following functionalities:
-- **Corrections and Fuel Management**:
-  - Tests creating, editing, and deleting corrections and fuel entries.
-  - Verifies that the data entered matches the expected values.
-- **Service Book**:
-  - Tests creating and managing service book entries.
-  - Verifies that filters and table headers display the correct text.
+- **`cypress/e2e/`** – Contains test files for specific functionalities:
+  - `Test TSS group stranka.cy.js` – Tests for the TSS Group page including login and navigation.
+  - `skvz.cy.js` – Tests for corrections, fuel management, and service book.
+  - `online.cy.js` – Tests for online vehicle tracking and related features.
+- **`cypress/support/commands.js`** – Placeholder for custom Cypress commands (currently empty).
+- **`cypress/support/e2e.js`** – Global configuration, such as handling uncaught exceptions.
+- **`cypress/fixtures/example.json`** – Sample data for mocking.
+- **`cypress.config.js`** – Cypress configuration including environment variables and base URL.
+- **`.circleci/config.yml`** – CircleCI configuration for CI/CD.
+- **`cypress.yml`** – GitHub Actions config for parallel test execution.
+- **`package.json`** – Project dependencies and scripts.
 
-### `online.cy.js`
-This test file focuses on online vehicle tracking:
-- **Dashboard Navigation**: Verifies the visibility and functionality of dashboard elements.
-- **Vehicle Search**: Tests searching for a specific vehicle and interacting with its details.
-- **Filters and Columns**: Verifies the functionality of filters and column visibility toggles.
+### Test Overview
 
-## Installation and Setup
-
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
+- **`Test TSS group stranka.cy.js`**: Login, navigation, localization validation.
+- **`skvz.cy.js`**: Correction and fuel entries, service book operations.
+- **`online.cy.js`**: Dashboard, vehicle search, filters, and columns toggling.
 
 ### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repo/SKVZ_CI.git
-2. Navigate to the project directory: 
+
+```bash
+git clone https://github.com/your-repo/SKVZ_CI.git
 cd SKVZ_CI
-3. Install Dependencies : 
 npm install
+```
 
-Environment Variables
-Set the following environment variables in cypress.config.js:
+Set environment variables in `cypress.config.js`:  
+- `username` and `password`
 
-username: Your login username.
-password: Your login password.
-Running Tests
+### Run Tests
 
-Run All Tests
-To run all tests, use the following command:
-npm run test
+- All tests: `npm run test`
+- Specific test: `npx cypress run --spec "cypress/e2e/<file>.cy.js"`
+- Cypress UI: `npx cypress open`
 
-Run Specific Test
-To run a specific test file, use:
-npx cypress run --spec "cypress/e2e/<test-file-name>.cy.js"
+### CI
 
-Open Cypress Test Runner
-To open the Cypress Test Runner, use:
-npx cypress open
-Continuous Integration
-CircleCI
-The .circleci/config.yml file is configured to run Cypress tests in a CI/CD pipeline. It installs dependencies, runs tests, and can deploy the application.
+- **CircleCI**: Uses `.circleci/config.yml`
+- **GitHub Actions**: Uses `cypress.yml` for parallel execution
 
-GitHub Actions
-The cypress.yml file is configured to run Cypress tests in parallel using GitHub Actions. It includes steps for checking out the code, starting the server, and running tests.
+### Dependencies
 
-Dependencies
-Key Dependencies
-Cypress: End-to-end testing framework.
-Moment.js: Library for date and time manipulation.
-Dev Dependencies
-cypress-parallel: Enables running Cypress tests in parallel.
+- Cypress, Moment.js
+- Dev: `cypress-parallel`
 
-Notes
-The tests include handling for elements that may not always be visible, ensuring that the tests are robust.
-The project uses both CircleCI and GitHub Actions for continuous integration.
-Future Improvements
-Add more custom commands in cypress/support/commands.js to reduce code duplication.
-Enhance test coverage for edge cases and error scenarios.
-Optimize test execution time by leveraging parallelization more effectively.
+### Improvements
+
+- Add custom commands
+- Improve edge case coverage
+- Optimize parallel runs
+
+---
+
+## 🇸🇰 Slovenská Verzia
+
+Tento repozitár obsahuje automatizované end-to-end (E2E) testy pre aplikáciu SKVZ pomocou nástroja Cypress. Testy overujú funkcionalitu rôznych komponentov a pracovných tokov v aplikácii, čím zabezpečujú, že systém sa správa podľa očakávaní.
+
+### Štruktúra projektu
+
+Dôležité súbory a adresáre:
+
+- **`cypress/e2e/`** – Obsahuje testy pre rôzne funkcionality:
+  - `Test TSS group stranka.cy.js` – Testy pre stránku TSS Group (login, navigácia).
+  - `skvz.cy.js` – Testy opráv, paliva, servisnej knihy.
+  - `online.cy.js` – Testy online sledovania vozidiel.
+- **`cypress/support/commands.js`** – Vlastné Cypress príkazy (momentálne prázdne).
+- **`cypress/support/e2e.js`** – Globálne nastavenia.
+- **`cypress/fixtures/example.json`** – Ukážkové dáta.
+- **`cypress.config.js`** – Konfigurácia Cypressu.
+- **`.circleci/config.yml`** – CI konfigurácia pre CircleCI.
+- **`cypress.yml`** – GitHub Actions konfigurácia.
+- **`package.json`** – Závislosti a skripty.
+
+### Prehľad testov
+
+- **`Test TSS group stranka.cy.js`**: Prihlásenie, navigácia, lokalizácia.
+- **`skvz.cy.js`**: Záznamy opráv, paliva, servisná kniha.
+- **`online.cy.js`**: Dashboard, vyhľadávanie vozidiel, filtre a stĺpce.
+
+### Inštalácia
+
+```bash
+git clone https://github.com/your-repo/SKVZ_CI.git
+cd SKVZ_CI
+npm install
+```
+
+Nastav premenné v `cypress.config.js`:  
+- `username` a `password`
+
+### Spúšťanie testov
+
+- Všetky testy: `npm run test`
+- Konkrétny test: `npx cypress run --spec "cypress/e2e/<nazov>.cy.js"`
+- UI rozhranie: `npx cypress open`
+
+### CI
+
+- **CircleCI**: `.circleci/config.yml`
+- **GitHub Actions**: `cypress.yml`
+
+### Závislosti
+
+- Cypress, Moment.js
+- Dev: `cypress-parallel`
+
+### Možnosti zlepšenia
+
+- Vytvoriť vlastné príkazy
+- Rozšíriť pokrytie pre okrajové prípady
+- Zrýchliť testy paralelizáciou
