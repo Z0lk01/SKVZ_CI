@@ -20,8 +20,18 @@ describe('Test TSS', () => {
           .wait(15000);
     });
 
-it("Localization SK_1", () => {
-        
+it.only("Localization SK_1", () => {
+        //kontrola viditeľnosti elemntov a ich textu
+        cy.get('body').then($body => {
+            if ($body.find('#id_news_users_modal_content').length > 0) {
+                // element existuje urobím assertion a odkliknem novinky
+                cy.get('#id_news_users_modal_content').should('be.visible');
+                cy.get('.confirm-modal-close').click();
+            } else {
+                // element sa na stránke nenachádza , test pokračuje ďalej 
+                cy.log('#id_news_users_modal_content');
+            }
+        });
         cy.get("#mainboard-filter-area > h1").should('contain', 'Dashboard')
         cy.get('#li-online-menu > [href="javascript:;"] > .title').should("be.visible") .click()
         cy.get('#gps_map_main').should("be.visible")
@@ -185,10 +195,18 @@ it("Localization SK_1", () => {
         cy.get('#planners').should("be.visible")
         .should("have.text", "Plánovač")
         cy.get('#li-planner > [href="javascript:;"]').click()
+        cy.get('#li-document-repository-menu > [href="javascript:;"]').should("be.visible")
+        .should("have.text", "GDPR").click()
+        cy.get('#document-repository').click()
+        cy.wait(2500)
+        cy.get('#document-repository_panel > .box > .panel_header > .title').should("be.visible").should("have.text", "Testovací dokument - GDPR")
+        cy.get('.content-body > .row > .col-xs-12').should("be.visible").should("have.text", "Toto je testovací opis dokumentu, ktorý môže byť veľmi dlhý. \nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+
         
 });
-it.only("Korekcie a tankovania", () => {
-const currentDate = new Date();
+it("Korekcie a tankovania", () => {
+//kontrola vytvárania editácie a mazania nákladov a servisnej knihy
+    const currentDate = new Date();
 const formattedTime = currentDate.toLocaleString('sk-SK', { 
         day: '2-digit', 
         month: '2-digit', 
@@ -230,7 +248,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
         cy.get("#select2-edit_costsnew_modules_currencys-results").children().contains("€").click()
         cy.get('#edit_costsnew_note').type("test")
         cy.get('#modal-success').click()
-        cy.wait(10800)
+        cy.wait(8800)
         cy.get('#costsnew_table > tbody > .odd > .sorting_1').then(($el) => {
                 // Získa text z poľa
                 const formattedText = $el.text()
@@ -247,11 +265,11 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
       expect(datePart).to.equal(expectedDate);
       expect(timePart).to.equal(expectedTime);
       cy.get('#costsnew_table > tbody > .odd > :nth-child(8)').should("have.text", expectedQuantity);
-      cy.get('#costsnew_table > tbody > .odd > :nth-child(9)').should("have.text", expectedCost);
+      cy.get('#costsnew_table > tbody > .odd > :nth-child(10)').should("have.text", expectedCost);
       cy.get('#costsnew_table > tbody > .odd > .dt-center > :nth-child(2)').click()
-      cy.get('#modal-success').click().wait(2000)
-      cy.get('#calendar_costsnew').find(".fc-event-container")
-      cy.get('#costsnew_refresh').click()
+      cy.get('#modal-cancel').click().wait(2500)
+      cy.get('#costsnew_table > tbody > .odd > .dt-center > :nth-child(3)').click()
+      cy.get('#modal-success').click()
       cy.get('#service-books-v2').click()
       cy.get('#service-books-v2_unit_filter-text').scrollIntoView().should("be.visible").should("have.attr", "placeholder", "Všetky vozidlá...") //pokus o scrollnutie aby test prebehol
       cy.get('#filter_centers_service_book_v2-component').should("be.visible")

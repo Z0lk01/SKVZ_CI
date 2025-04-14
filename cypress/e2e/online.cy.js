@@ -62,7 +62,7 @@ describe('Test TSS', () => {
         cy.get('#units-drives-calendar-toggle > .fa-calendar').should("be.visible").click()
         cy.get('#units-drives-calendar-toggle-datepicker-calendar-parent > .daterangepicker').should("be.visible")
         cy.get('#units-drives-calendar-toggle-datepicker-calendar-parent > .daterangepicker').should("be.visible")
-        cy.get('.left > .calendar-table > .table-condensed > thead > :nth-child(1) > .month > .monthselect').select(7)
+        cy.get('.left > .calendar-table > .table-condensed > thead > :nth-child(1) > .month > .monthselect').select(2)
         cy.get("#units-online-title").should("be.visible").should("have.text", "Späť na všetky vozidlá").should("have.css","background-color", "rgb(233, 30, 99)")
         cy.intercept({
             method: 'POST',
