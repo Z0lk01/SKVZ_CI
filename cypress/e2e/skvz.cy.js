@@ -20,7 +20,7 @@ describe('Test TSS', () => {
           .wait(15000);
     });
 
-it.only("Localization SK_1", () => {
+it("Localization SK_1", () => {
         //kontrola viditeľnosti elemntov a ich textu
         cy.get('body').then($body => {
             if ($body.find('#id_news_users_modal_content').length > 0) {
@@ -324,24 +324,48 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
         // Overí, či dátum a čas zodpovedajú očakávaným hodnotám
 expect(datePart).to.equal(expectedDate);
 expect(timePart).to.equal(expectedTime);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});
+it("Administrácia a vytváranie užívateľa", () => {
+//kontrola vytorenia testovacieho uživateľa priradenie práv a vozidiel
+cy.get('#li-object > [href="javascript:;"]').should("be.visible").click()
+cy.get('#users').should("be.visible").click()
+cy.get('#users_button_0').should("be.visible").click()
+cy.get('#edit_users_username').type("testuser")
+cy.get('#edit_users_password').type("testuser")
+cy.get('#edit_users_reset_on_login-helptext > .switchery').click()
+cy.get('#edit_users_email').type("hello@hello.com")
+cy.get('#edit_users_send_email-helptext > .switchery').click()
+cy.get('#edit_users_role').click()
+cy.get('#search_grid_roles_table > tbody > :nth-child(1) > .fixed').click()
+cy.get('#edit_users_supervisor').click()
+cy.get('#search_grid_users_with_profiles_table').find("mza").click()
+cy.get('#users-info-tab-2_link').click()
+cy.get('#edit_users_profile_surname').type("surname")
+cy.get('#edit_users_profile_name').type("name")
+cy.get('#edit_users_profile_phone').type("0900000000")
+cy.get('#edit_users_profile_note').type("testovacia poznámka k užívateľovi ktorého vytváram 100% v Cypress teste")
+cy.get('#users-info-tab-3_link').click()
+cy.get('#select2-edit_users_language-container').click()
+cy.get('#select2-edit_users_language-result-84fp-cz').click()
+cy.get('#update_user_can_approve_driving-helptext > .switchery').click()
+cy.get('#update_user_prepare_to_rent-helptext > .switchery').click()
+cy.get('#modal-success').click()
+cy.wait(5000)
+cy.get('#users_table_filter > label > input').click().type("testuser")
+cy.get('#users_table > tbody > :nth-child(1) > :nth-child(2)').should("have.text", "testuser")
 
 });
+
+
+
+
+
+
+
+
+
+
+
 });
 });
 });
