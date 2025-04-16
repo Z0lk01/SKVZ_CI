@@ -264,6 +264,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
                 // Overí, či dátum a čas zodpovedajú očakávaným hodnotám
       expect(datePart).to.equal(expectedDate);
       expect(timePart).to.equal(expectedTime);
+    });
       cy.get('#costsnew_table > tbody > .odd > :nth-child(8)').should("have.text", expectedQuantity);
       cy.get('#costsnew_table > tbody > .odd > :nth-child(10)').should("have.text", expectedCost);
       cy.get('#costsnew_table > tbody > .odd > .dt-center > :nth-child(2)').click()
@@ -325,6 +326,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
 expect(datePart).to.equal(expectedDate);
 expect(timePart).to.equal(expectedTime);
 });
+});
 it("Administrácia a vytváranie užívateľa", () => {
 //kontrola vytorenia testovacieho uživateľa priradenie práv a vozidiel
 cy.get('#li-object > [href="javascript:;"]').should("be.visible").click()
@@ -334,26 +336,61 @@ cy.get('#edit_users_username').type("testuser")
 cy.get('#edit_users_password').type("testuser")
 cy.get('#edit_users_reset_on_login-helptext > .switchery').click()
 cy.get('#edit_users_email').type("hello@hello.com")
-cy.get('#edit_users_send_email-helptext > .switchery').click()
 cy.get('#edit_users_role').click()
 cy.get('#search_grid_roles_table > tbody > :nth-child(1) > .fixed').click()
 cy.get('#edit_users_supervisor').click()
-cy.get('#search_grid_users_with_profiles_table').find("mza").click()
-cy.get('#users-info-tab-2_link').click()
+cy.get('#search_grid_users_with_profiles_table_filter > label > input').type("mza")
+cy.get('#search_grid_users_with_profiles_table > tbody > :nth-child(1) > .fixed').should("have.text", "mza").click()
+cy.get('#users-info-tab-2_link').should("be.visible").and("have.text", "Profil").click()
 cy.get('#edit_users_profile_surname').type("surname")
 cy.get('#edit_users_profile_name').type("name")
 cy.get('#edit_users_profile_phone').type("0900000000")
 cy.get('#edit_users_profile_note').type("testovacia poznámka k užívateľovi ktorého vytváram 100% v Cypress teste")
 cy.get('#users-info-tab-3_link').click()
+cy.wait(3200)
 cy.get('#select2-edit_users_language-container').click()
-cy.get('#select2-edit_users_language-result-84fp-cz').click()
+cy.get('#select2-edit_users_language-results > :nth-child(1)').should("be.visible").and("have.text", "Čeština").click()
 cy.get('#update_user_can_approve_driving-helptext > .switchery').click()
 cy.get('#update_user_prepare_to_rent-helptext > .switchery').click()
 cy.get('#modal-success').click()
-cy.wait(5000)
+cy.wait(8000)
 cy.get('#users_table_filter > label > input').click().type("testuser")
 cy.get('#users_table > tbody > :nth-child(1) > :nth-child(2)').should("have.text", "testuser")
-
+cy.get('#users_table > tbody > :nth-child(1) > :nth-child(4)').should("have.text", 'Zákazník - administrátor')
+cy.get('.dt-center > :nth-child(4)').should("be.visible").click()
+cy.intercept({
+    method: 'POST',
+    url: "https://support.tssmonitoring.sk/api/v1.3/users/delete.json?f=users_delete&callback=jQuery*"
+     }).as("apiRequest")
+cy.get('#modal-success').click()
+cy.wait('@apiRequest').then((interception) => {
+    assert.isNotNull(interception.response.body, 'API response is not null')
+    expect(interception.response.statusCode).to.equal(200);
+});
+});
+it.only("Kontrola rezervačného systému", () => {
+cy.get('#li-rentcar > [href="javascript:;"]').should("be.visible").and("have.text", "Rezervačný systém").click()
+cy.get("#rentcar").children().should("have.length", 7)
+cy.get('#rent_cars_prepare_v2').should("be.visible").and("have.text", "Autopožičovňa - priprave...")
+cy.get('#rent_cars_requests_for_me_v2').should("be.visible").and("have.text", "Autopožičovňa - schvaľov...")
+cy.get('#rent-cars-reports').should("be.visible").and("have.text", "Autopožičovňa reporty")
+cy.get('#busportals').should("be.visible").and("have.text", "Autobusy rezervácie")
+cy.get('#rent_cars_my_requests_v2').should("be.visible").and("have.text", "Autopožičovňa - moje žia...")
+cy.get('#rent_cars_v2').should("be.visible").and("have.text", "Autopožičovňa")
+cy.get('#taxiportals').should("be.visible").and("have.text", "Taxislužba")
+cy.get('#rent_cars_prepare_v2').click()
+cy.get('#rent_cars_prepare_v2_panel > section.box > .panel_header > .title').should("be.visible").and("have.text", "Pripravenie vozidla")
+cy.get('#rent_cars_prepare_v2_table').should("be.visible")
+cy.get('#rent_cars_requests_for_me_v2').click()
+cy.get('#rent_cars_requests_for_me_v2_panel > section.box > .panel_header > .title').should("be.visible").and("have.text", "Schvaľovanie žiadostí")
+cy.get('#filter_timeline_calendar_rent_cars_requests_for_me_v2-checkbox > .form-label').should("have.text", "Časová os").and("be.visible")
+cy.get('#filter_calendar_rent_cars_requests_for_me_v2-checkbox > .form-label').should("have.text", "Kalendár").and("be.visible")
+cy.get('#filter_timeline_calendar_rent_cars_requests_for_me_v2-helptext > .switchery').click()
+cy.get('.vis-timeline').should("be.visible")
+cy.get('#edit_rent_cars_requests_for_me_v2_timeline_moveToReservation > span').should("be.visible")
+cy.get('#edit_rent_cars_requests_for_me_v2_timeline_moveToday').should("be.visible")
+cy.get('#edit_rent_cars_requests_for_me_v2_timeline_zoomToday').should("be.visible")
+cy.get('#edit_rent_cars_requests_for_me_v2_timeline_zoomWeek').should("be.visible")
 });
 
 
@@ -366,6 +403,5 @@ cy.get('#users_table > tbody > :nth-child(1) > :nth-child(2)').should("have.text
 
 
 
-});
-});
+
 });
