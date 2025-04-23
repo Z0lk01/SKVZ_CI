@@ -102,7 +102,7 @@ cy.get('.dt-center > :nth-child(4)')
 //vymazanie užívateľa + kontrola API requestu
 cy.intercept({
     method: 'POST',
-    url: "https://support.tssmonitoring.sk/api/v1.3/users/delete.json?f=users_delete&callback=jQuery*"
+    url: "https://tssmonitoring.sk/api/v1.3/users/delete.json?f=users_delete&callback=jQuery*"
      }).as("apiRequest")
 cy.get('#modal-success').click()
 cy.wait('@apiRequest').then((interception) => {
