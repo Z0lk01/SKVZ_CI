@@ -11,14 +11,14 @@ describe('Test TSS', () => {
 
         cy.clearCookies()
           .clearLocalStorage()
-          .visit("https://support.tssmonitoring.sk/login")
+          .visit("/")
           .get('#user_login').type(username)
           .get('#user_pass').type(password)
           .get("#wp-submit").click()
           .wait(15000);
     });
         
-    it("Component 1", () => {
+    it("Kontrola noviniek na stránke", () => {
         cy.get('body').then($body => {
             if ($body.find('#id_news_users_modal_content').length > 0) {
                 // element existuje urobím assertion a odkliknem novinky
@@ -53,7 +53,7 @@ describe('Test TSS', () => {
          .type("942DE")
          cy.intercept({
             method: 'POST',
-            url: "https://support.tssmonitoring.sk/api/v1.3/onlines/index.json?f=onlines_index&callback=jQuery*"
+            url: "https://www.tssmonitoring.sk/api/v1.3/onlines/events.json?f=onlines_events&callback=jQuery*"
              }).as("apiRequest")
              cy.contains("Opel Insignia").click()
         cy.wait('@apiRequest').then((interception) => {
@@ -74,7 +74,7 @@ describe('Test TSS', () => {
                //expect(interception.response.statusCode).to.equal(200);
             cy.intercept({
                 method: 'POST',
-                url: "https://support.tssmonitoring.sk/api/v1.3/userGrids/read.json?f=userGrids_read&callback=jQuery*"
+                url: "https://tssmonitoring.sk/api/v1.3/userGrids/read.json?f=userGrids_read&callback=jQuery*"
                 }).as("apiRequest")
                  cy.get('#gps_units_online_new').click()
             cy.wait('@apiRequest').then((interception) => {
@@ -87,7 +87,7 @@ describe('Test TSS', () => {
         cy.get("#gps_units_online_new_filter_inspections").children().should("have.length", "5")
             cy.intercept({
             method: 'POST',
-            url: "https://support.tssmonitoring.sk/api/v1.3/userNotificationAlerts/getList.json?f=userNotificationAlerts_getList&callback=jQuery*"
+            url: "https://tssmonitoring.sk/api/v1.3/userNotificationAlerts/getList.json?f=userNotificationAlerts_getList&callback=jQuery*"
             }).as("apiRequest")
         cy.get('#gps_units_online_new_full_screen_btn').click()
              cy.wait('@apiRequest').then((interception) => {
@@ -118,7 +118,7 @@ describe('Test TSS', () => {
          cy.get('.even > .gps_units_online_new_input_name_column > [style="width:100%; min-width:310px; text-align: left;  cursor: default;"] > .dropdown > .fa').click()
          cy.intercept({
             method: 'POST',
-            url: "https://support.tssmonitoring.sk/api/v1.3/units/index.json?_mode=DataTables&is_archived=0&is_deleted=0&callback=jQuery*"
+            url: "https://tssmonitoring.sk/api/v1.3/units/index.json?_mode=DataTables&is_archived=0&is_deleted=0&callback=jQuery*"
             }).as("apiRequest")
          cy.get('.even > .gps_units_online_new_input_name_column > [style="width:100%; min-width:310px; text-align: left;  cursor: default;"] > .dropdown > .dropdown-menu  > :nth-child(1)').click()
                cy.wait('@apiRequest').then((interception) => {
@@ -128,7 +128,7 @@ describe('Test TSS', () => {
                cy.get("#units-info-basic-tab-1").should("be.visible").children().should("have.length", 17)
         cy.intercept({
             method: 'POST',
-            url: "https://support.tssmonitoring.sk/api/v1.3/units/releaseLock.json?f=units_releaseLock&callback=jQuery*"
+            url: "https://tssmonitoring.sk/api/v1.3/units/releaseLock.json?f=units_releaseLock&callback=jQuery*"
             }).as("apiRequest")
         cy.get('#modal-cancel').click()
             cy.wait('@apiRequest').then((interception) => {
@@ -139,7 +139,7 @@ describe('Test TSS', () => {
             cy.get(':nth-child(7) > .gps_units_online_new_input_name_column > [style="width:100%; min-width:310px; text-align: left;  cursor: default;"] > .dropdown > .fa').click()
             cy.intercept({
                 method: 'POST',
-                url: "https://support.tssmonitoring.sk/api/v1.3/UnitNotifications/index.json?_mode=DataTables&callback=jQuery*"
+                url: "https://tssmonitoring.sk/api/v1.3/UnitNotifications/index.json?_mode=DataTables&callback=jQuery*"
                 }).as("apiRequest")
                 cy.wait('@apiRequest').then((interception) => {
                     assert.isNotNull(interception.response.body, 'API response is not null')
