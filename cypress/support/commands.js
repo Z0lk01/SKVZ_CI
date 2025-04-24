@@ -9,3 +9,28 @@ Cypress.Commands.add('parseJsonpResponse', (interception) => {
     return JSON.parse(jsonString);
   });
   
+  //Príkaz na orezanie textu z elemntu ktorý obsahuje whitespace znaky
+  Cypress.Commands.add('shouldHaveTrimmedText', { prevSubject: 'element' }, (subject, expectedText) => {
+    cy.wrap(subject)
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.eq(expectedText);
+      });
+  });
+  
+  //Príkaz na orezanie hodnoty z elemntu ktorý obsahuje whitespace znaky
+  Cypress.Commands.add('shouldHaveTrimmedValue', { prevSubject: 'element' }, (subject, expectedValue) => {
+    cy.wrap(subject)
+      .invoke('val')
+      .then((value) => {
+        expect(value.trim()).to.eq(expectedValue);
+      });
+  });
+  
+  //Príkaz na vybranie včerajšeho dátumu v kalendári / yesterday= currentdate - 1day
+  Cypress.Commands.add('selectYesterdayInCalendar', () => {
+    cy.get('.today') // uprav podľa svojej triedy
+      .prev()
+      .click();
+  });
+  

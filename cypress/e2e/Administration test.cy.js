@@ -15,8 +15,12 @@ describe('Test TSS', () => {
           .visit("/")
           .get('#user_login').type(username)
           .get('#user_pass').type(password)
-          .get("#wp-submit").click()
-          .wait(15000);
+          cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/units/getList/myUnits/Manage.json?f=units_getList&callback=jQuery*').
+          as('webloading')
+          cy.get("#wp-submit")
+          .click()
+          cy.wait('@webloading', { timeout: 10000 });
+          
     
 });
 it("Administration", () => {
@@ -75,8 +79,7 @@ cy.get('#edit_users_profile_note')
 .type("testovacia poznámka k užívateľovi ktorého vytváram 100% v Cypress teste")
 cy.get('#users-info-tab-3_link')
 .click()
-cy.wait(3200)
-cy.get('#select2-edit_users_language-container')
+cy.get('#select2-edit_users_language-container', { timeout: 5000 })
 .click()
 cy.get('#select2-edit_users_language-results > :nth-child(1)')
 .should("be.visible")
@@ -88,8 +91,7 @@ cy.get('#update_user_prepare_to_rent-helptext > .switchery')
 .click()
 cy.get('#modal-success')
 .click()
-cy.wait(8000)
-cy.get('#users_table_filter > label > input')
+cy.get('#users_table_filter > label > input', { timeout: 5000 })
 .click()
 .type("testuser")
 cy.get('#users_table > tbody > :nth-child(1) > :nth-child(2)')

@@ -15,8 +15,12 @@ describe('Test TSS', () => {
           .visit("/")
           .get('#user_login').type(username)
           .get('#user_pass').type(password)
-          .get("#wp-submit").click()
-          .wait(15000);
+          cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/units/getList/myUnits/Manage.json?f=units_getList&callback=jQuery*').
+          as('webloading')
+          cy.get("#wp-submit")
+          .click()
+          cy.wait('@webloading', { timeout: 10000 });
+          
           it("Localization SK_1", () => {
             //kontrola viditeľnosti elemntov a ich textu
             cy.get('body').then($body => {

@@ -15,8 +15,11 @@ describe('Test TSS', () => {
           .visit("/")
           .get('#user_login').type(username)
           .get('#user_pass').type(password)
-          .get("#wp-submit").click()
-          .wait(15000);
+          cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/units/getList/myUnits/Manage.json?f=units_getList&callback=jQuery*').
+          as('webloading')
+          cy.get("#wp-submit")
+          .click()
+          cy.wait('@webloading', { timeout: 10000 });
     });
 
 
@@ -43,12 +46,10 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
         .click()
         cy.get("#corrections")
         .click()
-        cy.wait(6000)
-        cy.get('#corrections_button_0')
+        cy.get('#corrections_button_0', {timeout: 10000 })
         .should("be.visible")
         .click()
-        cy.wait(1500)
-        cy.get('#edit_corrections_time')
+        cy.get('#edit_corrections_time', {timeout: 10000 })
         .type("01:00")
         cy.get('#edit_corrections_tacho')
         .type("112233")
@@ -61,23 +62,19 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
         .click()
         cy.get('#modal-success').
         click()
-        cy.wait(9500)
-        cy.get('#costsnew')
+        cy.get('#costsnew', {timeout: 10000 })
         .scrollIntoView()
         .click()
-        cy.wait(4500)
-        cy.get('#costsnew_button_0')
+        cy.get('#costsnew_button_0', {timeout: 10000 })
         .click({force: true})
-        cy.wait(3500)
-        cy.get('#edit_drivers_unit')
+        cy.get('#edit_drivers_unit', {timeout: 10000 })
         .click({force: true})
         cy.get('#search_grid_units_table_filter > label > input')
         .type("IL 942DE")
         cy.get('#search_grid_units_table > tbody > .odd > .fixed')
         .should("have.text", "IL 942DE")
         .click()
-        cy.wait(1200)
-        cy.get('#edit_costsnew_time')
+        cy.get('#edit_costsnew_time', {timeout: 10000 })
         .type("01:00")
         cy.get('#edit_costsnew_quantity')
         .type("50")
@@ -97,9 +94,22 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
         .click()
         cy.get('#edit_costsnew_note')
         .type("test")
+        cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/FuelCardsDatas/create.json?f=FuelCardsDatas_create&callback=jQuery*')
+        .as('fueling')
         cy.get('#modal-success')
         .click()
-        cy.wait(8800)
+        cy.wait('@fueling') .then(({ request, response }) => {
+          expect(request.body).to.contain({
+            fk_unit_id: "207834be-7ac5-434a-9f77-b9563fbe47d3",
+            price_without_vat: "40.65",
+            quantity: "50",
+            price: "50",
+            note: "test",
+            fk_currency_id: "df50e937-69c3-48fa-909a-7da762aeef99",
+          }),
+
+          expect(response.statusCode).to.eq(200)
+        }),
         cy.get('#costsnew_table > tbody > .odd > .sorting_1').then(($el) => {
                 // Získa text z poľa
                 const formattedText = $el.text()
@@ -134,7 +144,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
       cy.get('#service-books-v2_unit_filter-text')
       .scrollIntoView()
       .should("be.visible")
-      .and("have.attr", "placeholder", "Všetky vozidlá...") //pokus o scrollnutie aby test prebehol
+      .and("have.attr", "placeholder", "Všetky vozidlá...") 
       cy.get('#filter_centers_service_book_v2-component')
       .should("be.visible")
       cy.get('#filter_centers_service_book_v2-component :nth-child(2)')
