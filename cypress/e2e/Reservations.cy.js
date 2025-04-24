@@ -405,7 +405,7 @@ cy.get('#rent_cars_requests_for_me_v2')
 .scrollIntoView()
 .click()
 cy.get('#rent_cars_requests_for_me_v2_table > tbody > :nth-child(1) > .dt-center')
-scrollIntoView()
+.scrollIntoView()
 cy.get('#rent_cars_requests_for_me_v2_table > tbody > :nth-child(1) > .dt-center > :nth-child(2)')
 .scrollIntoView()
 .click()
@@ -423,20 +423,20 @@ cy.get('#edit_rent_cars_date_return')
 .and("have.value", expectedDate)
 cy.get('#edit_rent_cars_unit')
 .scrollIntoView()
-should("be.visible")
+.should("be.visible")
 .and("have.value", "IL 942DE // Opel Insignia")
 cy.get('#edit_rent_cars_drive_number_purpose_driving')
 .scrollIntoView()
 .should("be.visible")
-and("have.value", "Testovací účel jazdy vytvorený pomocou Cypress")
+.and("have.value", "Testovací účel jazdy vytvorený pomocou Cypress")
 cy.get('#edit_rent_cars_drive_note')
 .scrollIntoView()
 .should("be.visible")
 .and("have.value", "Testovacia rezervácia vytvorená pomocou Cypress")
 cy.get('#select2-edit_rent_cars_drive_approve_state-container')
 .scrollIntoView()
-should("be.visible")
-ick()
+.should("be.visible")
+.click()
 cy.get("#select2-edit_rent_cars_drive_approve_state-results > :nth-child(2)")
 .should("be.visible")
 .and("have.text", "Zamietnuté")
@@ -519,7 +519,7 @@ cy.wait('@reservationRequest').then((interception) => {
     cy.parseJsonpResponse(interception).then((parsedResponse) => {
       const errorsString = parsedResponse.response.data.error;
       
-      // Rozdelíme chyby podľa bodkočiarok
+      // Rozdelenie chýb podľa bodkočiarok
       const errorsArray = errorsString.split(';').filter(Boolean); // .filter(Boolean) odstráni prázdne položky
   
       // Overenie očakávaných chýb

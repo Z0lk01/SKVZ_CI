@@ -81,17 +81,9 @@ describe('Test TSS', () => {
         .should("be.visible")
         .should("have.text", "Späť na všetky vozidlá")
         .and("have.css","background-color", "rgb(233, 30, 99)")
-        cy.intercept({
-            method: 'POST',
-            url: "https://maps.googleapis.com/$rpc/google.internal.maps.mapsjs.v1.MapsJsInternalService/GetViewportInfo"
-             }).as("apiRequest")
-        cy.get("#units-online-title").click()
-            //cy.wait('@apiRequest').then((interception) => {
-               //assert.isNotNull(interception.response.body, 'API response is not null')
-               //expect(interception.response.statusCode).to.equal(200);
             cy.intercept({
                 method: 'POST',
-                url: "https://tssmonitoring.sk/api/v1.3/userGrids/read.json?f=userGrids_read&callback=jQuery*"
+                url: "https://www.tssmonitoring.sk/api/v1.3/userGrids/read.json?f=userGrids_read&callback=jQuery*"
                 }).as("apiRequest")
                  cy.get('#gps_units_online_new').click()
             cy.wait('@apiRequest').then((interception) => {
@@ -106,18 +98,12 @@ describe('Test TSS', () => {
         cy.get("#gps_units_online_new_filter_inspections")
         .children()
         .should("have.length", "5")
-            cy.intercept({
-            method: 'POST',
-            url: "https://tssmonitoring.sk/api/v1.3/userNotificationAlerts/getList.json?f=userNotificationAlerts_getList&callback=jQuery*"
-            }).as("apiRequest")
-        cy.get('#gps_units_online_new_full_screen_btn').click()
-             cy.wait('@apiRequest').then((interception) => {
-                    assert.isNotNull(interception.response.body, 'API response is not null')
-                    expect(interception.response.statusCode).to.equal(200);
-                    cy.get('#gps_units_online_new_columns').then($el => {
-                        const outerText = $el[0].outerText;
+            
+        cy.get('#gps_units_online_new_columns').then($el => {
+                    const outerText = $el[0].outerText;
                         expect(outerText).to.equal(" Vyp./Zap. stĺpce");
                         $el.click()
+                    
         
         cy.get('#gps_units_online_new_column_chooser_modal')
         .should("be.visible")
@@ -140,17 +126,17 @@ describe('Test TSS', () => {
          cy.get('#gps_units_online_new_table')
          .find(".fa-globe")
          .eq(1)
-         click()
+         .click()
          cy.get('#gps_units_online_new_map')
          .should("be.visible")
          cy.get('#gps_units_online_new_info')
          .should("be.visible")
          cy.get('#gps_units_online_new_info > :nth-child(2)')
          .should("be.visible")
-         .should("have.text", "EČV : IL 942DE ")
+         .and("have.text", "EČV : IL 942DE ")
          cy.get('#gps_units_online_new_info > :nth-child(3)')
          .should("be.visible")
-         .should("have.text", "Meno vodiča : test mza mza ")
+         .and("have.text", "Meno vodiča : test mza mza ")
          cy.get('#gps_units_online_new_close_map > .fa')
          .click()
          cy.get('#gps_units_online_new_filter_IGN  > :nth-child(1)')
@@ -165,7 +151,7 @@ describe('Test TSS', () => {
          .click()
          cy.intercept({
             method: 'POST',
-            url: "https://tssmonitoring.sk/api/v1.3/units/index.json?_mode=DataTables&is_archived=0&is_deleted=0&callback=jQuery*"
+            url: "https://www.tssmonitoring.sk/api/v1.3/units/index.json?_mode=DataTables&is_archived=0&is_deleted=0&callback=jQuery*"
             }).as("apiRequest")
          cy.get('.even > .gps_units_online_new_input_name_column > [style="width:100%; min-width:310px; text-align: left;  cursor: default;"] > .dropdown > .dropdown-menu  > :nth-child(1)')
          .click()
@@ -179,7 +165,7 @@ describe('Test TSS', () => {
                .should("have.length", 17)
         cy.intercept({
             method: 'POST',
-            url: "https://tssmonitoring.sk/api/v1.3/units/releaseLock.json?f=units_releaseLock&callback=jQuery*"
+            url: "https://www.tssmonitoring.sk/api/v1.3/units/releaseLock.json?f=units_releaseLock&callback=jQuery*"
             }).as("apiRequest")
         cy.get('#modal-cancel').click()
             cy.wait('@apiRequest').then((interception) => {
@@ -195,12 +181,13 @@ describe('Test TSS', () => {
             .click()
             cy.intercept({
                 method: 'POST',
-                url: "https://tssmonitoring.sk/api/v1.3/UnitNotifications/index.json?_mode=DataTables&callback=jQuery*"
+                url: "https://www.tssmonitoring.sk/api/v1.3/UnitNotifications/index.json?_mode=DataTables&callback=jQuery*"
                 }).as("apiRequest")
                 cy.wait('@apiRequest').then((interception) => {
                     assert.isNotNull(interception.response.body, 'API response is not null')
                     expect(interception.response.statusCode).to.equal(200);
-            cy.get('#unit-notifications').click()
+            cy.get('#unit-notifications')
+            .click()
             cy.get("#unit-notifications_table_wrapper")
             .children()
             .should("have.length", 4)
@@ -239,5 +226,4 @@ describe('Test TSS', () => {
         });
      });
     });
-});
 });

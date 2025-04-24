@@ -116,9 +116,9 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
       expect(datePart).to.equal(expectedDate);
       expect(timePart).to.equal(expectedTime);
     });
-      cy.get('#costsnew_table > tbody > .odd > :nth-child(8)')
+      cy.get('#costsnew_table > tbody > .odd > :nth-child(9)')
       .should("have.text", expectedQuantity);
-      cy.get('#costsnew_table > tbody > .odd > :nth-child(10)')
+      cy.get('#costsnew_table > tbody > .odd > :nth-child(11)')
       .should("have.text", expectedCost);
       cy.get('#costsnew_table > tbody > .odd > .dt-center > :nth-child(2)')
       .click()
@@ -203,7 +203,7 @@ const formattedTime = currentDate.toLocaleString('sk-SK', {
       cy.get("#select2-edit_service_books_modules_products-results")
       .click()
       cy.get('#modal-success')
-      click()
+      .click()
       cy.get('#service-books-v2_table > tbody > :nth-child(1) > :nth-child(3)')
       .should("be.visible")
       .and("have.text", "IL 942DE")
