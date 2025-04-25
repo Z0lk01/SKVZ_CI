@@ -25,7 +25,7 @@ describe('Test TSS', () => {
 });
 });
 it("Login", () => {
-    //kontrola viditeľnosti elemntov a ich textu
+    //kontrola viditeľnosti elementov a ich textu
     cy.get('body').then($body => {
         if ($body.find('#id_news_users_modal_content').length > 0) {
             // element existuje urobím assertion a odkliknem novinky
