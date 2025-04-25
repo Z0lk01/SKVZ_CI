@@ -15,13 +15,13 @@ module.exports = defineConfig({
   },
   reporter: 'mochawesome',
 reporterOptions: {
-  reportDir: 'e2e/reports',
+  reportDir: 'cypress/reports',
   overwrite: false,
   html: false,
   json: true,
   embeddedScreenshots: true,
   inlineAssets: true
 },
-screenshotsFolder: 'e2e/screenshots',
+screenshotsFolder: 'cypress/screenshots',
 
 });
