@@ -1,0 +1,105 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-04-25T11:26:04.317Z",
+    "end": "2025-04-25T11:26:29.688Z",
+    "duration": 25371,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "c264ffec-9c9d-4c41-8118-7d74633b0517",
+      "title": "",
+      "fullFile": "cypress\\e2e\\Drivers test.cy.js",
+      "file": "cypress\\e2e\\Drivers test.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "e73790f8-c540-410a-a011-631bdf051567",
+          "title": "Test TSS",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Kontrola noviniek na stránke",
+              "fullTitle": "Test TSS Kontrola noviniek na stránke",
+              "timedOut": null,
+              "duration": 25120,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.get('body').then($body => {\n  if ($body.find('#id_news_users_modal_content').length > 0) {\n    // element existuje urobím assertion a odkliknem novinky\n    cy.get('#id_news_users_modal_content').should('be.visible');\n    cy.get('.confirm-modal-close').click();\n  } else {\n    // element sa na stránke nenachádza , test pokračuje ďalej \n    cy.log('#id_news_users_modal_content');\n  }\n});\n//overenie elemtntov modálového okna vytvárania vodiča\ncy.get('#li-settings > [href=\"javascript:;\"]').should(\"be.visible\").and(\"have.text\", \"Nastavenia\").click();\ncy.get('#li-drivers > #drivers').should(\"be.visible\").and(\"have.text\", \"Vodiči\").click();\ncy.get(\"#drivers_button_0\").should(\"be.visible\").shouldHaveTrimmedText(\"Vytvoriť nového vodiča\");\ncy.get(\"#drivers_button_0\").click();\ncy.get(\".modal-content\").should(\"be.visible\");\ncy.contains(\"Vytvorenie vodiča\").should(\"be.visible\");\ncy.get(\"#edit_drivers_token\").should(\"be.visible\").and(\"have.attr\", \"placeholder\", \"Vyplňte číslo tokenu\").type(\"12345\");\ncy.get(\"#edit_drivers_surname\").should(\"be.visible\").and(\"have.attr\", \"placeholder\", \"Vyplňte priezvisko\").type(\"Cypress\");\ncy.get(\"#edit_drivers_name\").should(\"be.visible\").and(\"have.attr\", \"placeholder\", \"Vyplňte meno\").type(\"Test\");\ncy.get(\"#edit_drivers_email\").should(\"be.visible\").and(\"have.attr\", \"placeholder\", \"Vyplňte e-mail adresu\");\ncy.get(\"#edit_drivers_telephone\").should(\"be.visible\").and(\"have.attr\", \"placeholder\", \"Vyplňte telefón\");\ncy.get(\"#edit_drivers_flap\").should(\"be.visible\").and(\"have.attr\", \"placeholder\", \"Zadajte klapku\");\ncy.get(\"#edit_drivers_note-component\").should(\"be.visible\");\ncy.get(\"#edit_drivers_note\").should(\"be.visible\").and(\"have.attr\", \"placeholder\", \"Zadajte poznámku\");\ncy.get(\"#edit_drivers_internal_number\").should(\"be.visible\").and(\"have.attr\", \"placeholder\", \"Zadajte interné číslo\");\ncy.get(\"#edit_drivers_non_driver-checkbox\").should(\"be.visible\");\ncy.get(\"#edit_drivers_non_driver-checkbox\").should(\"be.visible\");\ncy.get(\"#edit_drivers_non_driver-helptext > :nth-child(2)\").should(\"be.visible\").and(\"have.css\", \"background-color\", \"rgb(255, 255, 255)\").click();\ncy.get(\"#edit_drivers_non_driver-helptext > :nth-child(2)\").should(\"be.visible\").and(\"have.css\", \"background-color\", \"rgb(0, 0, 174)\").click();\ncy.get('#edit_drivers_benefit-checkbox > .form-label').should(\"be.visible\").should(\"have.text\", \"Benefitný vodič\");\ncy.get(\"#edit_drivers_benefit-helptext > :nth-child(2)\").should(\"have.css\", \"background-color\", \"rgb(255, 255, 255)\").click();\ncy.get(\"#edit_drivers_benefit-helptext > :nth-child(2)\").should(\"be.visible\").and(\"have.css\", \"background-color\", \"rgb(0, 0, 174)\").click();\n//vytvorenie vodiča s negatívnym výsledkom\ncy.intercept(\"POST\", \"https://www.tssmonitoring.sk/api/v1.3/drivers/create.json?f=drivers_create&callback=jQuery*\").as(\"createDriver\");\ncy.get('#modal-success').click();\ncy.wait('@createDriver').then(interception => {\n  cy.parseJsonpResponse(interception).then(parsedResponse => {\n    const errorsString = parsedResponse.response.data.error;\n    // Rozdelenie chýb podľa bodkočiarok\n    const errorsArray = errorsString.split(';').filter(Boolean); // .filter odstráni prázdne položky\n    // Overenie očakávaných chýb\n    expect(errorsArray).to.include('VALIDATE_FROM_NOT_DEFINED');\n    // Overenie počtu chýb\n    expect(errorsArray.length).to.equal(1);\n  });\n});\n//kontrola chybovej hlášky\ncy.get(\"#edit_drivers_date-start\").scrollIntoView().should(\"be.visible\").should(\"have.css\", \"border-color\", \"rgb(244, 67, 54)\").and(\"have.attr\", \"placeholder\", \"Zadajte dátum\");\ncy.get(\"#edit_drivers_date-error\").should(\"be.visible\").should(\"have.css\", \"color\", \"rgb(244, 67, 54)\").and(\"have.text\", \"Začiatok platnosti je povinný\");\n//fixnutie chyby a vytvorenie vodiča s pozitívnym výsledkom\ncy.get('#edit_drivers_date-start').should(\"be.visible\").click();\ncy.get('.show-calendar').should(\"be.visible\");\ncy.get('.today').should(\"be.visible\");\ncy.selectYesterdayInCalendar();\n//overenie tela requestu vytvorenie vodiča\nconst expectedRequestBody = {\n  id: \"\",\n  kurzy_vodicov: {},\n  name: \"Test\",\n  surname: \"Cypress\",\n  token: \"12345\",\n  email: \"\",\n  telephone: \"\",\n  note: \"\",\n  internal_number: \"\",\n  date_from: (0, _utilities.getFormattedYesterday)(),\n  date_from_timestamp: (0, _utilities.getYesterdayTimestampInSeconds)(),\n  date_to: null,\n  date_to_timestamp: null,\n  fk_center_id: \"\",\n  fk_unit_id: \"\",\n  fk_profile_id: \"\",\n  flap: \"\",\n  formation: \"\",\n  position: \"\",\n  work_time_from: \"\",\n  work_time_to: \"\",\n  residence: \"\",\n  non_driver: 0,\n  is_benefit: 0,\n  join_profiles: null,\n  join_profiles_ex: null,\n  remove_profiles: null\n};\ncy.intercept('POST', 'https://support.tssmonitoring.sk/api/v1.3/drivers/create.json?f=drivers_create&callback=jQuery*').as('createDriver');\n// Odoslanie requestu na vytvorenie vodiča\ncy.get(\"#modal-success\").scrollIntoView().should(\"be.visible\").click();\n// Overenie requestu\ncy.wait('@createDriver').then(({\n  request,\n  response\n}) => {\n  const actual = request.body;\n  const expected = expectedRequestBody;\n  // Vypísanie a porovnanie objektov\n  console.log(' Actual Request Body:', actual);\n  console.log('Expected Request Body:', expected);\n  expect(actual).to.deep.equal(expected);\n  expect(response.statusCode).to.equal(200);\n});\n//vymazanie testovacieho vodiča\ncy.get('label > input').scrollIntoView().should(\"be.visible\").type(\"Cypress\");\ncy.get('#drivers_table > tbody > :nth-child(1) > :nth-child(2)').should(\"be.visible\").and(\"have.text\", \"Cypress\");\ncy.get('#drivers_table_info > :nth-child(1) > :nth-child(1)').scrollIntoView().should(\"be.visible\").and(\"have.text\", \"1\");\ncy.get('#drivers_table > :nth-child(2) > :nth-child(1) > :nth-child(1) > :nth-child(3)').click();\n//kontrola API requestu na vymazanie vodiča\ncy.intercept(\"POST\", \"https://www.tssmonitoring.sk/api/v1.3/drivers/delete.json?f=drivers_delete&callback=jQuery*\").as(\"deleteDriver\");\ncy.get(\"#modal-success\").scrollIntoView().click();\ncy.wait('@deleteDriver').then(interception => {\n  expect(interception.response.statusCode).to.equal(200);\n});",
+              "err": {},
+              "uuid": "8a1ba56b-19eb-4d55-93de-1deae591dbe3",
+              "parentUUID": "e73790f8-c540-410a-a011-631bdf051567",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "8a1ba56b-19eb-4d55-93de-1deae591dbe3"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 25120,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}
