@@ -4,7 +4,7 @@ const timestamp = getYesterdayTimestampInSeconds(); // získať timestamp pre v�
 import { getFormattedYesterday } from '../support/utilities.js';
 const formattedDate = getFormattedYesterday(); // získať formátovaný dátum pre včera
 const { type } = require("os");
-describe('Test TSS', () => {
+describe('Testy TSS monitoringu', () => {
     beforeEach(() => {
         const username = Cypress.env('username') || 'your-username';
         const password = Cypress.env('password') || 'your-password';

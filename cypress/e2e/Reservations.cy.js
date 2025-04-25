@@ -2,7 +2,7 @@
 /// <reference types="cypress" />
 const moment = require('moment');
 const { type } = require("os");
-describe('Test TSS', () => {
+describe('Testy TSS monitoringu', () => {
     beforeEach(() => {
         const username = Cypress.env('username') || 'your-username';
         const password = Cypress.env('password') || 'your-password';

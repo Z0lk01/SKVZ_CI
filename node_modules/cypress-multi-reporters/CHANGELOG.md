@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.5](https://github.com/YOU54F/cypress-plugins/compare/v2.0.4...v2.0.5) (2025-01-27)
+
+
+### Bug Fixes
+
+* Mocha version comparison fix ([18f9c50](https://github.com/YOU54F/cypress-plugins/commit/18f9c505bba38ce11f97d692b1c6148e4d95f2a9))
+
+### [2.0.4](https://github.com/YOU54F/cypress-plugins/compare/v1.5.4...v2.0.4) (2024-10-25)
+
+
+### Bug Fixes
+
+* update cypress-multi-reporters repository and homepage URLs ([#1252](https://github.com/YOU54F/cypress-plugins/issues/1252)) ([2193ec7](https://github.com/YOU54F/cypress-plugins/commit/2193ec7dd03d959cf3e1a335ceb2329c5c4bd47c))
+
+### [2.0.3](https://github.com/you54f/cypress-multi-reporters/compare/v1.6.4...v2.0.3) (2024-10-24)
+
+
+### Bug Fixes
+
+* **cypress-multi-reporters:** bump version to 2.0.2 ([950e9c6](https://github.com/you54f/cypress-multi-reporters/commit/950e9c6486359c5456cc8a31ae3c114309502741))
+* **deps:** update cypress-multi-reporter deps ([e5d32d0](https://github.com/you54f/cypress-multi-reporters/commit/e5d32d0ff410c6f9d747089b8e50a31bca3e7a7f))
+* **deps:** update cypress-slack-reporter old deps ([f4414af](https://github.com/you54f/cypress-multi-reporters/commit/f4414af14089472930ee9b0a228f46d0d076e914))
+
+### [1.6.4](https://github.com/you54f/cypress-multi-reporters/compare/v1.6.3...v1.6.4) (2023-10-24)
+
+
+### Bug Fixes
+
+* **cypress-multi-reporters:** passing `reportOption` as an alias of `reportOptions` to match expectations in mocha ([15ed727](https://github.com/you54f/cypress-multi-reporters/commit/15ed727aa2b773d7d9d5d5f021bb9babbe3da594))
+
+### [1.6.3](https://github.com/you54f/cypress-multi-reporters/compare/v1.5.4...v1.6.3) (2023-10-24)
+
+
+### Bug Fixes
+
+* **cypress-multi-reporters:** passing `reportOption` as an alias of `reportOptions` to match expectations in mocha ([15ed727](https://github.com/you54f/cypress-multi-reporters/commit/15ed727aa2b773d7d9d5d5f021bb9babbe3da594))
+* **release:** 1.6.3 ([1a59355](https://github.com/you54f/cypress-multi-reporters/commit/1a5935558c70332fd559eb24927b66b6133dedfd))
+
 ### [1.6.3](https://github.com/you54f/cypress-multi-reporters/compare/v1.5.3...v1.6.3) (2023-03-13)
 
 
