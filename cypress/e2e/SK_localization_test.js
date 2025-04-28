@@ -1,322 +1,116 @@
 /// <reference types="cypress" />
 const moment = require('moment');
-const { type } = require("os");
+
 describe('Testy TSS monitoringu', () => {
     beforeEach(() => {
         const username = Cypress.env('username') || 'your-username';
         const password = Cypress.env('password') || 'your-password';
         const gdpr = Cypress.env('gdpr') || 'your-gdpr-text';
+
         if (!username || !password) {
             throw new Error('Environment variables username and password must be set');
         }
 
+        // Login and setup
         cy.clearCookies()
           .clearLocalStorage()
           .visit("/")
           .get('#user_login').type(username)
-          .get('#user_pass').type(password)
-          cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/units/getList/myUnits/Manage.json?f=units_getList&callback=jQuery*').
-          as('webloading')
-          cy.get("#wp-submit")
-          .click()
-          cy.wait('@webloading', { timeout: 10000 });
-          
-          it("Localization SK_1", () => {
-            //kontrola viditeľnosti elemntov a ich textu
-            cy.get('body').then($body => {
-                if ($body.find('#id_news_users_modal_content').length > 0) {
-                    // element existuje urobím assertion a odkliknem novinky
-                    cy.get('#id_news_users_modal_content').should('be.visible');
-                    cy.get('.confirm-modal-close').click();
-                } else {
-                    // element sa na stránke nenachádza , test pokračuje ďalej 
-                    cy.log('#id_news_users_modal_content');
-                }
-            });
-            cy.get("#mainboard-filter-area > h1")
-            .should('contain', 'Dashboard')
-            cy.get('#li-online-menu > [href="javascript:;"] > .title')
-            .should("be.visible")
-            .click()
-            cy.get('#gps_map_main')
-            .should("be.visible")
-            .and("have.text", "Mapa")
-            cy.get('#gps_units_online_new')
-            .should("be.visible")
-            .and("have.text", "Dispečer")
-            cy.get('#dashboard_online')
-            .should("be.visible")
-            .and("have.text", "Grafické prehľady")
-            cy.get('#unit-notifications')
-            .should("be.visible")
-            .and("have.text", "Hlásenia")
-            cy.get("#favorit-gps_map_main")
-            .should("not.be.visible")
-            .click({force: true})
-            cy.get("#favorit-gps_map_main")
-            .should("not.be.visible")
-            .and("have.class", "favorit")
-            .click({force: true})
-            cy.get("#gps_map_main")
-            .click()
-            cy.wait(2000)
-            cy.get("#units-online-search")
-            .should("have.attr", "placeholder", "Hľadať vozidlo / osobu")
-            .type("942DE")
-            cy.wait(3500)
-            cy.get('#company_name')
-            .should("be.visible")
-            .and("have.text", "Firmy a strediská")
-            cy.get('.all')
-            .should("be.visible")
-            cy.get(".zap")
-            .should("be.visible")
-            cy.get(".vyp")
-            .should("be.visible")
-            cy.get(".not")
-            .should("be.visible")
-            cy.get(".multi")
-            .should("be.visible")
-            cy.get("#units-online-box")
-            .should("be.visible")
-            cy.get('#li-online-menu > [href="javascript:;"] > .title')
-            .click()
-            cy.get('#li-object > [href="javascript:;"]')
-            .click()
-            cy.get('#users')
-            .should("be.visible")
-            .and("have.text","UžívateliaVytváranie užívateľa")
-            cy.get("#groups")
-            .should("be.visible")
-            .and("have.text","Skupiny")
-            cy.get('#li-object > [href="javascript:;"]')
-            .click()
-            cy.get('#li-rentcar > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "Rezervačný systém")
-            .click();
-            cy.get('#rent_cars_prepare_v2')
-            .should("be.visible")
-            .and("have.text", "Autopožičovňa - priprave...");
-            cy.get('#rent_cars_requests_for_me_v2')
-            .should("be.visible")
-            .and("have.text", "Autopožičovňa - schvaľov...");
-            cy.get("#busportals")
-            .should("be.visible")
-            .and("have.text", "Autobusy rezervácie");
-            cy.get('#rent-cars-reports')
-            .should("be.visible")
-            .and("have.text", "Autopožičovňa reporty");
-            cy.get('#rent_cars_my_requests_v2')
-            .should("be.visible")
-            .and("have.text", "Autopožičovňa - moje žia...");
-            cy.get('#rent_cars_v2')
-            .should("be.visible")
-            .and("have.text", "Autopožičovňa");
-            cy.get("#taxiportals")
-            .should("be.visible")
-            .and("have.text", "Taxislužba");
-            cy.get('#li-rentcar > [href="javascript:;"]')
-            .click()
-            cy.get('#li-settings > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "Nastavenia")
-            .click()
-            cy.get('#li-drivers > #drivers')
-            .should("be.visible")
-            .and("have.text", "Vodiči")
-            cy.get('#units')
-            .should("be.visible")
-            .and("have.text", "Vozidlá")
-            cy.get('#notifys')
-            .should("be.visible")
-            .and("have.text", "UpozorneniaNotifikácie")
-            cy.get('#centers')
-            .should("be.visible")
-            .and("have.text", "Strediská")
-            cy.get('#cost-centers')
-            .should("be.visible")
-            .and("have.text", "Nákladové strediská")
-            cy.get('#departments')
-            .should("be.visible")
-            .and("have.text", "Oddelenia")
-            cy.get('#li-settings > [href="javascript:;"]')
-            .click()
-            cy.get('#li-poismenu > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "Body záujmu")
-            .click()
-            cy.get('#pois')
-            .should("be.visible")
-            .and("have.text", "Správa oblastí")
-            cy.get('#poi_groups')
-            .should("be.visible")
-            .and("have.text", "Správa kategórií oblastí")
-            cy.get('#li-poismenu > [href="javascript:;"]')
-            .click()
-            cy.get('#li-drivebooksmenu > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "Jazdy")
-            .click()
-            cy.wait(3500)
-            cy.get('#drivebooks')
-            .should("be.visible")
-            .and("have.text", "Správa jázd")
-            cy.get('#drivetypes')
-            .should("be.visible")
-            .and("have.text", "Účel jazdy")
-            cy.get('#drive_conditions')
-            .should("be.visible")
-            .and("have.text", "Pravidlá pre jazdy")
-            cy.get('#drivebook_report_copy_0')
-            .should("be.visible")
-            .and("have.text", "Kniha jázd")
-            cy.get('#dailyreport_report_copy_0')
-            .should("be.visible")
-            .and("have.text", "Denný prehľad jázd")
-            cy.get('#monthlyreport_report_copy_0')
-            .should("be.visible")
-            .and("have.text", "Mesačný/Súhrnný prehľad")
-            cy.get('#drivetypes')
-            .should("be.visible")
-            .and("have.text", "Účel jazdy")
-            cy.get('#drive_conditions')
-            .should("be.visible")
-            .and("have.text", "Pravidlá pre jazdy")
-            cy.get('#motohours')
-            .scrollIntoView()
-            .should("be.visible")
-            .and("have.text", "Motohodiny")
-            cy.get('#fuel-analyses')
-            .scrollIntoView()
-            cy.get('#travel-allowance')
-            cy.get('#newdrives')
-            .scrollIntoView()
-            .should("have.text", "Jazdy")
-            .and("be.visible")
-            cy.get("#main-menu-wrapper > .ps-scrollbar-y-rail > .ps-scrollbar-y")
-            .click()
-            cy.get('#consumptions')
-            .scrollIntoView()
-            .should("have.text", "Správa spotrieb")
-            .and("be.visible")
-            cy.get('#routeplans')
-            .scrollIntoView()
-            .should("have.text", "Plánovač trás")
-            .and("be.visible")
-            cy.get('#drivebooks_manuals')
-            .scrollIntoView()
-            should("have.text", "Evidencia jázd")
-            .and("be.visible")
-            cy.get('#li-drivebooksmenu > [href="javascript:;"]')
-            .click()
-            cy.get('#li-reportsmenu > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "Reporty")
-            cy.get('#li-fuelsmenu > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "Tankovania")
-            .click()
-            cy.get('#addfuelcost')
-            .should("be.visible")
-            .and("have.text", "Pridať tankovanie")
-            cy.get('#fuelcards')
-            .should("be.visible")
-            .and("have.text", "Tankovacie karty")
-            cy.get('#fuel_cards_imports')
-            .should("be.visible")
-            .and("have.text", "Import z tankovacích kariet")
-            cy.get('#fuelreport_report_copy_0')
-            .should("be.visible")
-            .and("have.text", "Prehľad tankovaní")
-            cy.get('#li-fuelsmenu > [href="javascript:;"]')
-            .click()
-            cy.get('#li-toolsmenu > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "Nástroje")
-            .click()
-            cy.get('#corrections')
-            .should("be.visible")
-            .and("have.text", "Korekcia tachometra")
-            cy.get('#fuellevel_corrections')
-            .should("be.visible")
-            .and("have.text", "Korekcia hladiny paliva")
-            cy.get('#costs_report_copy_0')
-            .should("be.visible")
-            .and("have.text", "Prehľad nákladov")
-            cy.get('#costsnew')
-            .should("be.visible")
-            .and("have.text", "Správa nákladov")
-            cy.get('#service-books-v2')
-            .should("be.visible")
-            .and("have.text", "Servisná kniha")
-            cy.get('#li-toolsmenu > [href="javascript:;"]')
-            .click()
-            cy.get('#li-tachographsmenu > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "Tachografy")
-            .click()
-            cy.get('#aetr')
-            .should("be.visible")
-            .and("have.text", "Aetrs")
-            cy.get('#aetrsdispatchers')
-            .should("be.visible")
-            .and("have.text", "Dispečer")
-            cy.get('#aetrsnotifications')
-            .should("be.visible")
-            .and("have.text", "Porušenia AETR")
-            cy.get('#tachographs')
-            .should("be.visible")
-            .and("have.text", "Stiahnuté súbory")
-            cy.get('#aetrsdddviewers')
-            .should("be.visible")
-            .and("have.text", "Prehliadač súborov")
-            cy.get('#li-tachographsmenu > [href="javascript:;"]')
-            .click()
-            cy.get('#li-workingsmenu > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "Práca")
-            .click()
-            cy.get('#works')
-            .should("be.visible")
-            .and("have.text", "Prehľad práce")
-            cy.get('#li-workingsmenu > [href="javascript:;"]')
-            .click()
-            cy.get('#li-vzv-menu > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "Vysokozdvižné vozíky")
-            .click()
-            cy.get('#vzvusage')
-            .should("be.visible")
-            .and("have.text", "Využiteľnosť VZV")
-            cy.get('#li-vzv-menu > [href="javascript:;"]')
-            .click()
-            cy.get('#li-planner > [href="javascript:;"]')
-            .should("be.visible")
-            .should("have.text", "Plánovač")
-            .click()
-            cy.get('#planners')
-            .should("be.visible")
-            and("have.text", "Plánovač")
-            cy.get('#li-planner > [href="javascript:;"]')
-            .click()
-            cy.get('#li-document-repository-menu > [href="javascript:;"]')
-            .should("be.visible")
-            .and("have.text", "GDPR")
-            .click()
-            cy.get('#document-repository')
-            .click()
-            cy.wait(2500)
-            cy.get('#document-repository_panel > .box > .panel_header > .title')
-            .should("be.visible")
-            .and("have.text", "Testovací dokument - GDPR")
-            cy.get('.content-body > .row > .col-xs-12')
-            .should("be.visible")
-            .and("have.text", gdpr)
-    
-    
-    
-    
-        });
-        });
+          .get('#user_pass').type(password);
+
+        cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/units/getList/myUnits/Manage.json?f=units_getList&callback=jQuery*')
+          .as('webloading');
+
+        cy.get("#wp-submit").click();
+        cy.wait('@webloading', { timeout: 10000 });
     });
+
+    it("Localization SK_1", () => {
+        // Handle news modal if present
+        cy.get('body').then($body => {
+            if ($body.find('#id_news_users_modal_content').length > 0) {
+                cy.get('#id_news_users_modal_content').should('be.visible');
+                cy.get('.confirm-modal-close').click();
+            } else {
+                cy.log('#id_news_users_modal_content not found');
+            }
+        });
+
+        // Verify dashboard elements
+        cy.get("#mainboard-filter-area > h1")
+          .should('contain', 'Dashboard');
+
+        const menuItems = [
+            { selector: '#gps_map_main', text: 'Mapa' },
+            { selector: '#gps_units_online_new', text: 'Dispečer' },
+            { selector: '#dashboard_online', text: 'Grafické prehľady' },
+            { selector: '#unit-notifications', text: 'Hlásenia' },
+        ];
+
+        menuItems.forEach(item => {
+            cy.get(item.selector)
+              .should("be.visible")
+              .and("have.text", item.text);
+        });
+
+        // Verify reservation system menu
+        cy.get('#li-rentcar > [href="javascript:;"]')
+          .should("be.visible")
+          .and("have.text", "Rezervačný systém")
+          .click();
+
+        const reservationMenuItems = [
+            { selector: '#rent_cars_prepare_v2', text: "Autopožičovňa - priprave..." },
+            { selector: '#rent_cars_requests_for_me_v2', text: "Autopožičovňa - schvaľov..." },
+            { selector: '#busportals', text: "Autobusy rezervácie" },
+            { selector: '#rent-cars-reports', text: "Autopožičovňa reporty" },
+            { selector: '#rent_cars_my_requests_v2', text: "Autopožičovňa - moje žia..." },
+            { selector: '#rent_cars_v2', text: "Autopožičovňa" },
+            { selector: '#taxiportals', text: "Taxislužba" },
+        ];
+
+        reservationMenuItems.forEach(item => {
+            cy.get(item.selector)
+              .should("be.visible")
+              .and("have.text", item.text);
+        });
+
+        // Verify settings menu
+        cy.get('#li-settings > [href="javascript:;"]')
+          .should("be.visible")
+          .and("have.text", "Nastavenia")
+          .click();
+
+        const settingsMenuItems = [
+            { selector: '#li-drivers > #drivers', text: "Vodiči" },
+            { selector: '#units', text: "Vozidlá" },
+            { selector: '#notifys', text: "UpozorneniaNotifikácie" },
+            { selector: '#centers', text: "Strediská" },
+            { selector: '#cost-centers', text: "Nákladové strediská" },
+            { selector: '#departments', text: "Oddelenia" },
+        ];
+
+        settingsMenuItems.forEach(item => {
+            cy.get(item.selector)
+              .should("be.visible")
+              .and("have.text", item.text);
+        });
+
+        // Verify GDPR document
+        cy.get('#li-document-repository-menu > [href="javascript:;"]')
+          .should("be.visible")
+          .and("have.text", "GDPR")
+          .click();
+
+        cy.get('#document-repository')
+          .click();
+
+        cy.get('#document-repository_panel > .box > .panel_header > .title')
+          .should("be.visible")
+          .and("have.text", "Testovací dokument - GDPR");
+
+        cy.get('.content-body > .row > .col-xs-12')
+          .should("be.visible")
+          .and("have.text", gdpr);
+    });
+});

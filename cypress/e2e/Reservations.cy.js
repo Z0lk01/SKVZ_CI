@@ -1,7 +1,6 @@
-
 /// <reference types="cypress" />
 const moment = require('moment');
-const { type } = require("os");
+
 describe('Testy TSS monitoringu', () => {
     beforeEach(() => {
         const username = Cypress.env('username') || 'your-username';
@@ -11,544 +10,141 @@ describe('Testy TSS monitoringu', () => {
             throw new Error('Environment variables username and password must be set');
         }
 
+        // Login and setup
         cy.clearCookies()
           .clearLocalStorage()
           .visit("/")
           .get('#user_login').type(username)
-          .get('#user_pass').type(password)
-          cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/units/getList/myUnits/Manage.json?f=units_getList&callback=jQuery*').
-          as('webloading')
-          cy.get("#wp-submit")
-          .click()
-          cy.wait('@webloading', { timeout: 10000 });
+          .get('#user_pass').type(password);
+
+        cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/units/getList/myUnits/Manage.json?f=units_getList&callback=jQuery*')
+          .as('webloading');
+
+        cy.get("#wp-submit").click();
+        cy.wait('@webloading', { timeout: 10000 });
     });
 
-it("Kontrola rezervačného systému", () => {
-//kontrola elementov rezervačného systému , textu a viditeľnosti rezervácií
-cy.get('#li-rentcar > [href="javascript:;"]')
-.should("be.visible")
-.and("have.text", "Rezervačný systém")
-.click()
-cy.get("#rentcar")
-.children()
-.should("have.length", 7)
-cy.get('#rent_cars_prepare_v2')
-.should("be.visible")
-.and("have.text", "Autopožičovňa - priprave...")
-cy.get('#rent_cars_requests_for_me_v2')
-.should("be.visible")
-.and("have.text", "Autopožičovňa - schvaľov...")
-cy.get('#rent-cars-reports')
-.should("be.visible")
-.and("have.text", "Autopožičovňa reporty")
-cy.get('#busportals')
-.should("be.visible")
-.and("have.text", "Autobusy rezervácie")
-cy.get('#rent_cars_my_requests_v2')
-.should("be.visible")
-.and("have.text", "Autopožičovňa - moje žia...")
-cy.get('#rent_cars_v2')
-.should("be.visible")
-.and("have.text", "Autopožičovňa")
-cy.get('#taxiportals')
-.should("be.visible")
-.and("have.text", "Taxislužba")
-cy.get('#rent_cars_prepare_v2')
-.click()
-cy.get('#rent_cars_prepare_v2_panel > section.box > .panel_header > .title')
-.should("be.visible")
-.and("have.text", "Pripravenie vozidla")
-cy.get('#rent_cars_prepare_v2_table')
-.should("be.visible")
-cy.get('#rent_cars_requests_for_me_v2')
-.click()
-cy.get('#rent_cars_requests_for_me_v2_panel > section.box > .panel_header > .title')
-.should("be.visible")
-.and("have.text", "Schvaľovanie žiadostí")
-cy.get('#filter_timeline_calendar_rent_cars_requests_for_me_v2-checkbox > .form-label')
-.should("have.text", "Časová os")
-.and("be.visible")
-cy.get('#filter_calendar_rent_cars_requests_for_me_v2-checkbox > .form-label')
-.should("have.text", "Kalendár")
-.and("be.visible")
-cy.get('#filter_timeline_calendar_rent_cars_requests_for_me_v2-helptext > .switchery')
-.click()
-cy.get('.vis-timeline')
-.should("be.visible")
-cy.get('#edit_rent_cars_requests_for_me_v2_timeline_moveToReservation > span')
-.should("be.visible")
-cy.get('#edit_rent_cars_requests_for_me_v2_timeline_moveToday')
-.should("be.visible")
-cy.get('#edit_rent_cars_requests_for_me_v2_timeline_zoomToday')
-.should("be.visible")
-cy.get('#edit_rent_cars_requests_for_me_v2_timeline_zoomWeek')
-.should("be.visible")
-cy.intercept({
-    method: 'POST',
-    url: "https://www.tssmonitoring.sk/api/v1.3/RentCars/read.json?f=RentCars_read&callback=jQuery*"
-}).as("apiRequest")
-cy.get('#rent_cars_requests_for_me_v2_table > tbody > :nth-child(1) > .dt-center > :nth-child(2)')
-.scrollIntoView()
-.click()
-cy.wait('@apiRequest').then((interception) => {
-    assert.isNotNull(interception.response.body, 'API response is not null')
-    expect(interception.response.statusCode).to.equal(200);
-});
-cy.get('#edit_rent_cars_driver_id-search > .form-label')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Vodiči")
-cy.get('#edit_rent_cars_driver_id')
-  .shouldhaveTrimmedValue("000000A")
-cy.get('#edit_rent_cars_location-component > .form-label')
-.should("be.visible")
-.and("have.text", "Stredisko / Lokalita")
-cy.get('#edit_rent_cars_date-component > .form-label')
-.should("be.visible")
-.and("have.text", "Dátum požičania")
-cy.get('#edit_rent_cars_time-component > .form-label')
-.should("be.visible")
-.and("have.text", "Čas požičania")
-cy.get('#edit_rent_cars_date')
-.should("be.visible")
-.and("have.value", "28.01.2025")
-cy.get('#edit_rent_cars_time')
-.should("be.visible")
-.and("have.value", "11:15")
-cy.get('#edit_rent_cars_date_return-component > .form-label')
-.should("be.visible")
-.and("have.text", "Dátum vrátenia")
-cy.get('#edit_rent_cars_time_return-component > .form-label')
-.should("be.visible")
-.and("have.text", "Čas vrátenia")
-cy.get('#edit_rent_cars_date_return')
-.should("be.visible")
-.and("have.value", "28.01.2025")
-cy.get('#edit_rent_cars_time_return')
-.should("be.visible")
-.and("have.value", "12:00")
-cy.get('#edit_rent_cars_unit-search > .form-label')
-.should("be.visible")
-.and("have.text", "Vyberte vozidlo")
-cy.get('#edit_rent_cars_unit')
-.should("be.visible")
-.and("have.value", "detekcia pv // detekcia pv")
-cy.get('#edit_rent_cars_drive_approver-component > .form-label')
-.should("be.visible")
-.and("have.text", "Schvaľovateľ")
-cy.get('#select2-edit_rent_cars_drive_approver-container')
-.should("be.visible")
-.and("have.text", "×test mza mza")
-cy.get('#edit_rent_cars_destination-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Cieľ jazdy")
-cy.get('#edit_rent_cars_destination')
-.should("be.visible")
-.and("have.value", "Kancel")
-cy.get('#edit_rent_cars_drive_places-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Miesta jazdy")
-cy.get('#edit_rent_cars_drive_passengers-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Pasažieri")
-cy.get('#edit_rent_cars_drive_number_passengers-helptext > :nth-child(2)')
-.scrollIntoView()
-should("be.visible")
-.and("have.text", "Počet pasažierov")
-cy.get('#edit_rent_cars_drive_number_passengers')
-.should("be.visible")
-.and("have.value", "1")
-cy.get('#edit_rent_cars_drive_number_estimated_distance-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Odhadovaná vzdialenosť (km)")
-cy.get('#edit_rent_cars_drive_number_purpose_driving-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Účel jazdy")
-cy.get('#edit_rent_cars_drive_number_purpose_driving')
-.should("be.visible")
-.and("have.value", "Test")
-cy.get('#edit_rent_cars_drive_note-component > .form-label')
-.should("be.visible")
-.and("have.text", "Poznámka")
-cy.get('#edit_rent_cars_mail-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "E-mail pre informáciu o stave žiadosti")
-cy.get('#edit_rent_cars_drive_approve_state-component > .form-label')
-.should("be.visible")
-.and("have.text", "Schváliť / zamietnuť")
-cy.get('#select2-edit_rent_cars_drive_approve_state-container')
-.should("be.visible")
-.and("have.text", "×Schválené")
-cy.get('#modal-cancel')
-.scrollIntoView()
-.should("be.visible")
-.click()
-cy.get('#filter_timeline_calendar_rent_cars_requests_for_me_v2-helptext > .switchery')
-.click()
-});
-it.only("Vytvorenie rezervácie vozidla", () => {
-//kontrola vytvorenia rezervácie vozidla a jej editácia a schválenie
-cy.get('#li-rentcar > [href="javascript:;"]')
-.should("be.visible")
-.and("have.text", "Rezervačný systém")
-.click()
-cy.get('#rent_cars_my_requests_v2')
-.should("be.visible")
-.and("have.text", "Autopožičovňa - moje žia...")
-.click()
-cy.get('#rent_cars_my_requests_v2_panel > section.box > .panel_header > .title')
-.should("be.visible")
-.and("have.text", "Správa mojich žiadostí")
-cy.get('#filter_timeline_calendar_rent_cars_my_requests_v2-checkbox > .form-label')
-.should("have.text", "Časová os")
-.and("be.visible")
-cy.get('#filter_calendar_rent_cars_my_requests_v2-checkbox > .form-label')
-.should("have.text", "Kalendár")
-.and("be.visible")
-cy.get('#filter_date_rent_cars_my_requests_v2-checkbox > .form-label')
-.should("have.text", "Filter podľa dátumu")
-.and("be.visible")
-cy.get('#rent_cars_my_requests_v2_button')
-  .invoke('text')
-  .then((text) => {
-    expect(text.trim()).to.eq('Vytvoriť novú žiadosť'); // Očakávaná hodnota
+    it("Kontrola rezervačného systému", () => {
+        // Verify reservation system menu
+        cy.get('#li-rentcar > [href="javascript:;"]')
+          .should("be.visible")
+          .and("have.text", "Rezervačný systém")
+          .click();
+
+        cy.get("#rentcar")
+          .children()
+          .should("have.length", 7);
+
+        const menuItems = [
+            { selector: '#rent_cars_prepare_v2', text: "Autopožičovňa - priprave..." },
+            { selector: '#rent_cars_requests_for_me_v2', text: "Autopožičovňa - schvaľov..." },
+            { selector: '#rent-cars-reports', text: "Autopožičovňa reporty" },
+            { selector: '#busportals', text: "Autobusy rezervácie" },
+            { selector: '#rent_cars_my_requests_v2', text: "Autopožičovňa - moje žia..." },
+            { selector: '#rent_cars_v2', text: "Autopožičovňa" },
+            { selector: '#taxiportals', text: "Taxislužba" },
+        ];
+
+        menuItems.forEach(item => {
+            cy.get(item.selector)
+              .should("be.visible")
+              .and("have.text", item.text);
+        });
+
+        // Verify "Pripravenie vozidla" section
+        cy.get('#rent_cars_prepare_v2').click();
+        cy.get('#rent_cars_prepare_v2_panel > section.box > .panel_header > .title')
+          .should("be.visible")
+          .and("have.text", "Pripravenie vozidla");
+
+        cy.get('#rent_cars_prepare_v2_table')
+          .should("be.visible");
+
+        // Verify "Schvaľovanie žiadostí" section
+        cy.get('#rent_cars_requests_for_me_v2').click();
+        cy.get('#rent_cars_requests_for_me_v2_panel > section.box > .panel_header > .title')
+          .should("be.visible")
+          .and("have.text", "Schvaľovanie žiadostí");
+
+        const filters = [
+            { selector: '#filter_timeline_calendar_rent_cars_requests_for_me_v2-checkbox > .form-label', text: "Časová os" },
+            { selector: '#filter_calendar_rent_cars_requests_for_me_v2-checkbox > .form-label', text: "Kalendár" },
+        ];
+
+        filters.forEach(filter => {
+            cy.get(filter.selector)
+              .should("be.visible")
+              .and("have.text", filter.text);
+        });
+
+        cy.get('#filter_timeline_calendar_rent_cars_requests_for_me_v2-helptext > .switchery')
+          .click();
+
+        cy.get('.vis-timeline')
+          .should("be.visible");
+
+        const timelineButtons = [
+            '#edit_rent_cars_requests_for_me_v2_timeline_moveToReservation > span',
+            '#edit_rent_cars_requests_for_me_v2_timeline_moveToday',
+            '#edit_rent_cars_requests_for_me_v2_timeline_zoomToday',
+            '#edit_rent_cars_requests_for_me_v2_timeline_zoomWeek',
+        ];
+
+        timelineButtons.forEach(button => {
+            cy.get(button).should("be.visible");
+        });
+
+        // Intercept and validate API call
+        cy.intercept({
+            method: 'POST',
+            url: "https://www.tssmonitoring.sk/api/v1.3/RentCars/read.json?f=RentCars_read&callback=jQuery*"
+        }).as("apiRequest");
+
+        cy.get('#rent_cars_requests_for_me_v2_table > tbody > :nth-child(1) > .dt-center > :nth-child(2)')
+          .scrollIntoView()
+          .click();
+
+        cy.wait('@apiRequest').then((interception) => {
+            assert.isNotNull(interception.response.body, 'API response is not null');
+            expect(interception.response.statusCode).to.equal(200);
+        });
+
+        // Verify reservation details
+        const reservationDetails = [
+            { selector: '#edit_rent_cars_driver_id-search > .form-label', text: "Vodiči" },
+            { selector: '#edit_rent_cars_location-component > .form-label', text: "Stredisko / Lokalita" },
+            { selector: '#edit_rent_cars_date-component > .form-label', text: "Dátum požičania" },
+            { selector: '#edit_rent_cars_time-component > .form-label', text: "Čas požičania" },
+            { selector: '#edit_rent_cars_date_return-component > .form-label', text: "Dátum vrátenia" },
+            { selector: '#edit_rent_cars_time_return-component > .form-label', text: "Čas vrátenia" },
+        ];
+
+        reservationDetails.forEach(detail => {
+            cy.get(detail.selector)
+              .scrollIntoView()
+              .should("be.visible")
+              .and("have.text", detail.text);
+        });
+
+        cy.get('#edit_rent_cars_date')
+          .should("be.visible")
+          .and("have.value", moment().format('DD.MM.YYYY'));
+
+        cy.get('#edit_rent_cars_time')
+          .should("be.visible")
+          .and("have.value", "11:15");
+
+        cy.get('#edit_rent_cars_date_return')
+          .should("be.visible")
+          .and("have.value", moment().format('DD.MM.YYYY'));
+
+        cy.get('#edit_rent_cars_time_return')
+          .should("be.visible")
+          .and("have.value", "12:00");
+
+        cy.get('#modal-cancel')
+          .scrollIntoView()
+          .should("be.visible")
+          .click();
     });
-cy.get('#div_filter_for_rent_cars_my_requests_v2_container_general_span')
-.should("be.visible")
-cy.intercept({
-    method: 'GET',
-    url: "https://www.tssmonitoring.sk/api/v1.3/Profiles/getList/basic/pk_profile_id/5451e151-e69f-42fd-a178-79b669c92957.json?f=Profiles_getList&callback=jQuery*"
-}).as("apiRequest")
-cy.get('#rent_cars_my_requests_v2_button_0')
-.click()
-cy.wait('@apiRequest').then((interception) => {
-    assert.isNotNull(interception.response.body, 'API response is not null')
-    expect(interception.response.statusCode).to.equal(200);
-});
-cy.get('.modal-title')
-.should("be.visible")
-.and("have.text", "Vytvorenie novej položky")
-cy.get('#edit_rent_cars_driver_id-search > .form-label')
-.should("be.visible")
-.and("have.text", "Vodiči")
-cy.get('#edit_rent_cars_drive_approver-component > .form-label')
-.should("be.visible")
-.and("have.text", "Schvaľovateľ")
-cy.get('#select2-edit_rent_cars_drive_approver-container')
-.scrollIntoView()
-.should("be.visible")
-cy.get('#edit_rent_cars_location-component > .form-label')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Stredisko / Lokalita")
-cy.get('#select2-edit_rent_cars_location-container')
-.scrollIntoView()
-.should("be.visible")
-cy.get('#edit_rent_cars_mail-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "E-mail pre informáciu o stave žiadosti")
-cy.get('#edit_rent_cars_mail')
-.scrollIntoView()
-.should("be.visible")
-.and("have.value", "zilka@tssgroup.sk")
-cy.get('#edit_rent_cars_date-component > .form-label')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Dátum požičania")
-const currentDate = new Date();
-const formattedTime = currentDate.toLocaleString('sk-SK', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit',
-      });
-      const expectedDate = moment().format('DD.MM.YYYY'); // Aktuálny dátum
-cy.get('#edit_rent_cars_date')
-.should("be.visible")
-.and("have.value", expectedDate)
-cy.get('#edit_rent_cars_time')
-.should("be.visible")
-.and("have.value", "00:00")
-cy.get('#edit_rent_cars_date_return-component > .form-label')
-.should("be.visible")
-.and("have.text", "Dátum vrátenia")
-cy.get('#edit_rent_cars_date_return')
-.should("be.visible")
-.and("have.value", expectedDate)
-cy.get('#edit_rent_cars_time_return-component > .form-label')
-.should("be.visible")
-.and("have.text", "Čas vrátenia")
-cy.get('#edit_rent_cars_time_return')
-.should("be.visible")
-.and("have.value", "00:00")
-cy.get('#edit_rent_cars_destination-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Cieľ jazdy")
-cy.get('#edit_rent_cars_destination')
-.scrollIntoView()
-.should("be.visible")
-cy.get('#edit_rent_cars_drive_number_passengers-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Počet pasažierov")
-cy.get('#edit_rent_cars_drive_number_passengers-helptext > :nth-child(2)')
-.should("be.visible")
-cy.get('#edit_rent_cars_drive_number_purpose_driving-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Účel jazdy")
-cy.get('#edit_rent_cars_drive_number_purpose_driving')
-.scrollIntoView()
-.should("be.visible")
-cy.get('#edit_rent_cars_unit-search > .form-label')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Vyberte vozidlo")
-cy.get('#edit_rent_cars_unit')
-.scrollIntoView()
-.should("be.visible")
-cy.get('#edit_rent_cars_drive_approve_state-component > .form-label')
-.should("be.visible")
-.and("have.text", "Schváliť / zamietnuť")
-cy.get('#edit_rent_cars_drive_approve_state-component > .form-label')
-.scrollIntoView()
-.should("be.visible")
-cy.get('#edit_rent_cars_drive_note-component > .form-label')
-.should("be.visible")
-.and("have.text", "Poznámka")
-cy.get('#edit_rent_cars_drive_number_estimated_distance-helptext > :nth-child(2)')
-.scrollIntoView()
-.should("be.visible")
-.and("have.text", "Odhadovaná vzdialenosť (km)")
-cy.get('#edit_rent_cars_drive_number_estimated_distance')
-.scrollIntoView()
-.should("be.visible")
-cy.get('#edit_rent_cars_drive_note')
-.scrollIntoView()
-.should("be.visible")
-//rezervácia s pozitívnym výsledkom
-cy.get('#select2-edit_rent_cars_drive_approver-container')
-.scrollIntoView()
-.should("be.visible")
-.click()
-cy.get("#select2-edit_rent_cars_drive_approver-results")
-.should("be.visible")
-.click()
-cy.get('#edit_rent_cars_destination')
-.scrollIntoView()
-.should("be.visible")
-.type("Práca")
-cy.get('#edit_rent_cars_drive_number_passengers')
-.scrollIntoView()
-.should("be.visible")
-.type("2")
-cy.get('#edit_rent_cars_drive_number_purpose_driving')
-.scrollIntoView()
-.should("be.visible")
-.type("Testovací účel jazdy vytvorený pomocou Cypress")
-cy.get('#edit_rent_cars_drive_note')
-.scrollIntoView()
-.should("be.visible")
-.type("Testovacia rezervácia vytvorená pomocou Cypress")
-cy.get('#select2-edit_rent_cars_location-container')
-.scrollIntoView()
-.should("be.visible")
-.click()
-cy.get("#select2-edit_rent_cars_location-results > :nth-child(3)")
-.click()
-cy.get('#edit_rent_cars_time')
-.scrollIntoView()
-.should("be.visible")
-.type("22:00")
-cy.get('#edit_rent_cars_time_return')
-.scrollIntoView()
-.should("be.visible")
-.type("23:00")
-cy.get('#edit_rent_cars_unit')
-.scrollIntoView()
-.should("be.visible")
-.click()
-cy.get('#search_grid_units_table_filter > label > input')
-.should("be.visible")
-.type("IL 942DE")
-cy.get('#search_grid_units_table > tbody > .odd > :nth-child(2)')
-.should("be.visible")
-.and("have.text", "Opel Insignia")
-.click()
-cy.get('#edit_rent_cars_unit')
-.scrollIntoView()
-.should("be.visible")
-.and("have.value", "IL 942DE")
-cy.intercept({
-    method: 'POST',
-    url: "https://www.tssmonitoring.sk/api/v1.3/RentCars/create.json?f=RentCars_create&callback=jQuery*"
-}).as("apiRequest")
-cy.get('#modal-success')
-.scrollIntoView()
-.should("be.visible")
-.click()
-cy.wait('@apiRequest').then((interception) => {
-    assert.isNotNull(interception.response.body, 'API response is not null')
-    expect(interception.response.statusCode).to.equal(200);
-});
-cy.wait(3200)
-cy.get('#rent_cars_requests_for_me_v2')
-.scrollIntoView()
-.click()
-cy.get('#rent_cars_requests_for_me_v2_table > tbody > :nth-child(1) > .dt-center')
-.scrollIntoView()
-cy.get('#rent_cars_requests_for_me_v2_table > tbody > :nth-child(1) > .dt-center > :nth-child(2)')
-.scrollIntoView()
-.click()
-cy.get('#edit_rent_cars_driver_id')
-.scrollIntoView()
-.should("be.visible")
-.and("have.value", "test mza mza")
-cy.get('#edit_rent_cars_date')
-.scrollIntoView()
-.should("be.visible")
-.and("have.value", expectedDate)
-cy.get('#edit_rent_cars_date_return')
-.scrollIntoView()
-.should("be.visible")
-.and("have.value", expectedDate)
-cy.get('#edit_rent_cars_unit')
-.scrollIntoView()
-.should("be.visible")
-.and("have.value", "IL 942DE // Opel Insignia")
-cy.get('#edit_rent_cars_drive_number_purpose_driving')
-.scrollIntoView()
-.should("be.visible")
-.and("have.value", "Testovací účel jazdy vytvorený pomocou Cypress")
-cy.get('#edit_rent_cars_drive_note')
-.scrollIntoView()
-.should("be.visible")
-.and("have.value", "Testovacia rezervácia vytvorená pomocou Cypress")
-cy.get('#select2-edit_rent_cars_drive_approve_state-container')
-.scrollIntoView()
-.should("be.visible")
-.click()
-cy.get("#select2-edit_rent_cars_drive_approve_state-results > :nth-child(2)")
-.should("be.visible")
-.and("have.text", "Zamietnuté")
-.click()
-cy.get('#modal-success')
-.scrollIntoView()
-.should("be.visible")
-.click()
-//rezervácia s negatívnym výsledkom
-cy.get('#rent_cars_my_requests_v2')
-.scrollIntoView()
-.click()
-cy.intercept({
-    method: 'GET',
-    url: "https://www.tssmonitoring.sk/api/v1.3/Profiles/getList/basic/pk_profile_id/5451e151-e69f-42fd-a178-79b669c92957.json?f=Profiles_getList&callback=jQuery*"
-}).as("apiRequest")
-cy.get('#rent_cars_my_requests_v2_button_0').click()
-cy.wait('@apiRequest').then((interception) => {
-    assert.isNotNull(interception.response.body, 'API response is not null')
-    expect(interception.response.statusCode).to.equal(200);
-});
-cy.get('#select2-edit_rent_cars_drive_approver-container')
-.scrollIntoView()
-.should("be.visible")
-.click()
-cy.get("#select2-edit_rent_cars_drive_approver-results")
-.should("be.visible")
-cy.get('#edit_rent_cars_destination')
-.scrollIntoView()
-.should("be.visible")
-.type("Práca")
-cy.get('#edit_rent_cars_drive_number_passengers')
-.scrollIntoView()
-.should("be.visible")
-.type("2")
-cy.get('#edit_rent_cars_drive_number_purpose_driving')
-.scrollIntoView()
-.should("be.visible")
-cy.get('#edit_rent_cars_drive_note')
-.scrollIntoView()
-.should("be.visible")
-cy.get('#select2-edit_rent_cars_location-container')
-.scrollIntoView()
-.should("be.visible")
-.click()
-cy.get("#select2-edit_rent_cars_location-results > :nth-child(3)")
-.click()
-cy.get('#edit_rent_cars_time')
-.scrollIntoView()
-.should("be.visible")
-.type("22:00")
-cy.get('#edit_rent_cars_time_return')
-.scrollIntoView()
-.should("be.visible")
-.type("23:00")
-cy.get('#edit_rent_cars_unit')
-.scrollIntoView()
-.should("be.visible")
-.click()
-cy.get('#search_grid_units_table_filter > label > input')
-.should("be.visible")
-.type("IL 942DE")
-cy.get('#search_grid_units_table > tbody > .odd > :nth-child(2)')
-.should("be.visible")
-.and("have.text", "Opel Insignia")
-.click()
-cy.get('#edit_rent_cars_unit')
-.scrollIntoView()
-.should("be.visible")
-.and("have.value", "IL 942DE")
-cy.intercept({
-    method: 'POST',
-    url: "https://www.tssmonitoring.sk/api/v1.3/RentCars/create.json?f=RentCars_create&callback=jQuery*"
-}).as("reservationRequest")
-cy.get('#modal-success')
-.scrollIntoView()
-.should("be.visible")
-.click()
-cy.wait('@reservationRequest').then((interception) => {
-    cy.parseJsonpResponse(interception).then((parsedResponse) => {
-      const errorsString = parsedResponse.response.data.error;
-      
-      // Rozdelenie chýb podľa bodkočiarok
-      const errorsArray = errorsString.split(';').filter(Boolean); // .filter(Boolean) odstráni prázdne položky
-  
-      // Overenie očakávaných chýb
-      expect(errorsArray).to.include('APPROVER_ERROR_CODE');
-      expect(errorsArray).to.include('DESTINATION_ERROR_CODE');
-      expect(errorsArray).to.include('PURPOSE_ERROR_CODE');
-     // Overenie počtu chýb
-      expect(errorsArray.length).to.equal(3);
-    });
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-});
 });
