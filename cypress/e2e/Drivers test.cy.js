@@ -40,7 +40,8 @@ describe('Testy TSS monitoringu', () => {
         cy.get('#li-drivers > #drivers').should("be.visible").and("have.text", "Vodiči").click();
 
         // Verify and create a new driver
-        cy.get("#drivers_button_0").should("be.visible").shouldHaveTrimmedText("Vytvoriť nového vodiča").click();
+        cy.get("#drivers_button_0").should("be.visible").shouldHaveTrimmedText("Vytvoriť nového vodiča")
+        cy.get('#drivers_button_0').click();
         cy.get(".modal-content").should("be.visible");
         cy.contains("Vytvorenie vodiča").should("be.visible");
 
@@ -48,20 +49,17 @@ describe('Testy TSS monitoringu', () => {
             { selector: "#edit_drivers_token", placeholder: "Vyplňte číslo tokenu", value: "12345" },
             { selector: "#edit_drivers_surname", placeholder: "Vyplňte priezvisko", value: "Cypress" },
             { selector: "#edit_drivers_name", placeholder: "Vyplňte meno", value: "Test" },
-            { selector: "#edit_drivers_email", placeholder: "Vyplňte e-mail adresu", value: "" },
-            { selector: "#edit_drivers_telephone", placeholder: "Vyplňte telefón", value: "" },
-            { selector: "#edit_drivers_flap", placeholder: "Zadajte klapku", value: "" },
-            { selector: "#edit_drivers_note", placeholder: "Zadajte poznámku", value: "" },
-            { selector: "#edit_drivers_internal_number", placeholder: "Zadajte interné číslo", value: "" },
+            { selector: "#edit_drivers_email", placeholder: "Vyplňte e-mail adresu", value: "@" },
+            { selector: "#edit_drivers_telephone", placeholder: "Vyplňte telefón", value: "00000" },
+            { selector: "#edit_drivers_flap", placeholder: "Zadajte klapku", value: "0" },
+            { selector: "#edit_drivers_note", placeholder: "Zadajte poznámku", value: "Test" },
+            { selector: "#edit_drivers_internal_number", placeholder: "Zadajte interné číslo", value: "1" },
         ];
-
         driverDetails.forEach(detail => {
-            cy.get(detail.selector)
-              .should("be.visible")
-              .and("have.attr", "placeholder", detail.placeholder)
-              .type(detail.value);
+            cy.get(detail.selector).should("be.visible").should("have.attr", "placeholder", detail.placeholder).type(detail.value);
         });
 
+    
         // Toggle driver options
         const toggleOptions = [
             { selector: "#edit_drivers_non_driver-helptext > :nth-child(2)", initialColor: "rgb(255, 255, 255)", toggledColor: "rgb(0, 0, 174)" },
@@ -86,7 +84,7 @@ describe('Testy TSS monitoringu', () => {
         });
 
         // Fix missing field and create driver
-        cy.get('#edit_drivers_date-start').should("be.visible").click();
+        cy.get('#edit_drivers_date-start').scrollIntoView().should("be.visible").click();
         cy.get('.show-calendar').should("be.visible");
         cy.selectYesterdayInCalendar();
 
@@ -96,10 +94,10 @@ describe('Testy TSS monitoringu', () => {
             name: "Test",
             surname: "Cypress",
             token: "12345",
-            email: "",
-            telephone: "",
-            note: "",
-            internal_number: "",
+            email: "@",
+            telephone: "00000",
+            note: "Test",
+            internal_number: "1",
             date_from: getFormattedYesterday(),
             date_from_timestamp: getYesterdayTimestampInSeconds(),
             date_to: null,
@@ -107,7 +105,7 @@ describe('Testy TSS monitoringu', () => {
             fk_center_id: "",
             fk_unit_id: "",
             fk_profile_id: "",
-            flap: "",
+            flap: "0",
             formation: "",
             position: "",
             work_time_from: "",

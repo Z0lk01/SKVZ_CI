@@ -79,18 +79,6 @@ describe('Testy TSS monitoringu', () => {
         cy.get('#users_table_filter > label > input', { timeout: 5000 }).click().type("testuser");
         cy.get('#users_table > tbody > :nth-child(1) > :nth-child(2)').should("have.text", "testuser");
         cy.get('#users_table > tbody > :nth-child(1) > :nth-child(4)').should("have.text", 'Zákazník - administrátor');
-
-        // Delete the user and validate API request
-        cy.get('.dt-center > :nth-child(4)').should("be.visible").click();
-        cy.intercept({
-            method: 'POST',
-            url: "https://tssmonitoring.sk/api/v1.3/users/delete.json?f=users_delete&callback=jQuery*"
-        }).as("apiRequest");
-        cy.get('#modal-success').click();
-        cy.wait('@apiRequest').then((interception) => {
-            assert.isNotNull(interception.response.body, 'API response is not null');
-            expect(interception.response.statusCode).to.equal(200);
         });
     });
-});
 

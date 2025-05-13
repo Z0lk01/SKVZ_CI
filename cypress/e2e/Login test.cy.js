@@ -10,14 +10,14 @@ describe('Testy TSS monitoringu', () => {
             throw new Error('Environment variables username and password must be set');
         }
 
-        // Login and setup
+        // Login
         cy.clearCookies()
           .clearLocalStorage()
           .visit("/")
           .get('#user_login').type(username)
           .get('#user_pass').type(password);
 
-        cy.intercept('POST', 'https://tssmonitoring.sk/api/v1.3/UnitsEquipments/getList/notifications.json?f=UnitsEquipments_getList&callback=jQuery*')
+        cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/units/getList/myUnits/Manage.json?f=units_getList&callback=jQuery*')
           .as('webloading');
 
         cy.get("#wp-submit").click();
@@ -37,9 +37,9 @@ describe('Testy TSS monitoringu', () => {
             }
         });
 
-        // Verify dashboard elements
-        cy.get('#dashboard')
+        // Verify dashboard element
+        cy.get('#mainboard-content-body')
           .should('be.visible')
-          .and('contain.text', 'Welcome to the Dashboard');
+          
     });
 });

@@ -1,8 +1,7 @@
 
 # SKVZ_CI
 
-> EN This README contains both English and Slovak versions.  
-> 🇸🇰 Tento README obsahuje anglickú aj slovenskú verziu.
+> This README contains both English and Slovak versions.  
 
 ---
 
@@ -120,8 +119,3 @@ Nastav premenné v `cypress.config.js`:
 - Cypress, Moment.js
 - Dev: `cypress-parallel`
 
-### Možnosti zlepšenia
-
-- Vytvoriť vlastné príkazy
-- Rozšíriť pokrytie pre okrajové prípady
-- Zrýchliť testy paralelizáciou
