@@ -1,0 +1,107 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-05-14T06:40:52.723Z",
+    "end": "2025-05-14T06:41:22.244Z",
+    "duration": 29521,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "54004082-7d93-470c-a533-5f1a91714e1d",
+      "title": "",
+      "fullFile": "cypress\\e2e\\Drivers test.cy.js",
+      "file": "cypress\\e2e\\Drivers test.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "fadc019c-508e-466e-91ca-0a82fac121a8",
+          "title": "Testy TSS monitoringu",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Kontrola noviniek na stránke",
+              "fullTitle": "Testy TSS monitoringu Kontrola noviniek na stránke",
+              "timedOut": null,
+              "duration": 29216,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// Handle news modal if present\ncy.get('body').then($body => {\n  if ($body.find('#id_news_users_modal_content').length > 0) {\n    cy.get('#id_news_users_modal_content').should('be.visible');\n    cy.get('.confirm-modal-close').click();\n  } else {\n    cy.log('#id_news_users_modal_content not found');\n  }\n});\n// Navigate to Drivers section\ncy.get('#li-settings > [href=\"javascript:;\"]').should(\"be.visible\").and(\"have.text\", \"Nastavenia\").click();\ncy.get('#li-drivers > #drivers').should(\"be.visible\").and(\"have.text\", \"Vodiči\").click();\n// Verify and create a new driver\ncy.get(\"#drivers_button_0\").should(\"be.visible\").shouldHaveTrimmedText(\"Vytvoriť nového vodiča\");\ncy.get('#drivers_button_0').click();\ncy.get(\".modal-content\").should(\"be.visible\");\ncy.contains(\"Vytvorenie vodiča\").should(\"be.visible\");\nconst driverDetails = [{\n  selector: \"#edit_drivers_token\",\n  placeholder: \"Vyplňte číslo tokenu\",\n  value: \"12345\"\n}, {\n  selector: \"#edit_drivers_surname\",\n  placeholder: \"Vyplňte priezvisko\",\n  value: \"Cypress\"\n}, {\n  selector: \"#edit_drivers_name\",\n  placeholder: \"Vyplňte meno\",\n  value: \"Test\"\n}, {\n  selector: \"#edit_drivers_email\",\n  placeholder: \"Vyplňte e-mail adresu\",\n  value: \"@\"\n}, {\n  selector: \"#edit_drivers_telephone\",\n  placeholder: \"Vyplňte telefón\",\n  value: \"00000\"\n}, {\n  selector: \"#edit_drivers_flap\",\n  placeholder: \"Zadajte klapku\",\n  value: \"0\"\n}, {\n  selector: \"#edit_drivers_note\",\n  placeholder: \"Zadajte poznámku\",\n  value: \"Test\"\n}, {\n  selector: \"#edit_drivers_internal_number\",\n  placeholder: \"Zadajte interné číslo\",\n  value: \"1\"\n}];\ndriverDetails.forEach(detail => {\n  cy.get(detail.selector).should(\"be.visible\").should(\"have.attr\", \"placeholder\", detail.placeholder).type(detail.value);\n});\n// Toggle driver options\nconst toggleOptions = [{\n  selector: \"#edit_drivers_non_driver-helptext > :nth-child(2)\",\n  initialColor: \"rgb(255, 255, 255)\",\n  toggledColor: \"rgb(0, 0, 174)\"\n}, {\n  selector: \"#edit_drivers_benefit-helptext > :nth-child(2)\",\n  initialColor: \"rgb(255, 255, 255)\",\n  toggledColor: \"rgb(0, 0, 174)\"\n}];\ntoggleOptions.forEach(option => {\n  cy.get(option.selector).should(\"have.css\", \"background-color\", option.initialColor).click();\n  cy.get(option.selector).should(\"have.css\", \"background-color\", option.toggledColor).click();\n});\n// Attempt to create driver with missing required fields\ncy.intercept(\"POST\", \"https://www.tssmonitoring.sk/api/v1.3/drivers/create.json?f=drivers_create&callback=jQuery*\").as(\"createDriver\");\ncy.get('#modal-success').click();\ncy.wait('@createDriver').then(interception => {\n  cy.parseJsonpResponse(interception).then(parsedResponse => {\n    const errorsString = parsedResponse.response.data.error;\n    const errorsArray = errorsString.split(';').filter(Boolean);\n    expect(errorsArray).to.include('VALIDATE_FROM_NOT_DEFINED');\n    expect(errorsArray.length).to.equal(1);\n  });\n});\n// Fix missing field and create driver\ncy.get('#edit_drivers_date-start').scrollIntoView().should(\"be.visible\").click();\ncy.get('.show-calendar').should(\"be.visible\");\ncy.selectYesterdayInCalendar();\nconst expectedRequestBody = {\n  id: \"\",\n  kurzy_vodicov: {},\n  name: \"Test\",\n  surname: \"Cypress\",\n  token: \"12345\",\n  email: \"@\",\n  telephone: \"00000\",\n  note: \"Test\",\n  internal_number: \"1\",\n  date_from: (0, _utilities.getFormattedYesterday)(),\n  date_from_timestamp: (0, _utilities.getYesterdayTimestampInSeconds)(),\n  date_to: null,\n  date_to_timestamp: null,\n  fk_center_id: \"\",\n  fk_unit_id: \"\",\n  fk_profile_id: \"\",\n  flap: \"0\",\n  formation: \"\",\n  position: \"\",\n  work_time_from: \"\",\n  work_time_to: \"\",\n  residence: \"\",\n  non_driver: 0,\n  is_benefit: 0,\n  join_profiles: null,\n  join_profiles_ex: null,\n  remove_profiles: null\n};\ncy.intercept('POST', 'https://support.tssmonitoring.sk/api/v1.3/drivers/create.json?f=drivers_create&callback=jQuery*').as('createDriver');\ncy.get(\"#modal-success\").scrollIntoView().should(\"be.visible\").click();\ncy.wait('@createDriver').then(({\n  request,\n  response\n}) => {\n  expect(request.body).to.deep.equal(expectedRequestBody);\n  expect(response.statusCode).to.equal(200);\n});\n// Delete the test driver\ncy.get('label > input').scrollIntoView().should(\"be.visible\").type(\"Cypress\");\ncy.get('#drivers_table > tbody > :nth-child(1) > :nth-child(2)').should(\"be.visible\").and(\"have.text\", \"Cypress\");\ncy.get('#drivers_table > :nth-child(2) > :nth-child(1) > :nth-child(1) > :nth-child(3)').click();\ncy.intercept(\"POST\", \"https://www.tssmonitoring.sk/api/v1.3/drivers/delete.json?f=drivers_delete&callback=jQuery*\").as(\"deleteDriver\");\ncy.get(\"#modal-success\").scrollIntoView().click();\ncy.wait('@deleteDriver').then(interception => {\n  expect(interception.response.statusCode).to.equal(200);\n});",
+              "err": {},
+              "uuid": "8a1c7d5f-f471-451b-a7a7-ddfe517efe1a",
+              "parentUUID": "fadc019c-508e-466e-91ca-0a82fac121a8",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "8a1c7d5f-f471-451b-a7a7-ddfe517efe1a"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 29216,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true,
+        "embeddedScreenshots": true,
+        "inlineAssets": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}
