@@ -1,0 +1,37 @@
+name: Daily Cypress Tests & Report Deployment
+
+on:
+  schedule:
+    - cron: '0 7 * * *'  # Spustenie každý deň o 07:00 UTC (pozor na časové pásma)
+  workflow_dispatch:     # Manuálne spustenie z GitHub rozhrania
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 🟢 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 📦 Install dependencies
+        run: npm install
+
+      - name: 🧪 Run Cypress tests and generate report
+        run: node report.js
+
+      - name: 📁 Copy mochawesome.html to deployment dir
+        run: |
+          mkdir -p ./public
+          cp cypress/reports/mochawesome.html ./public/index.html
+
+      - name: 🚀 Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
