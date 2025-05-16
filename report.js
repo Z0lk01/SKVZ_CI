@@ -2,14 +2,20 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Cesty k priečinkom
-const reportsDir = path.join(__dirname, 'cypress', 'reports');
-const mergedReport = path.join(reportsDir, 'merged-report.json');
-const htmlReport = path.join(reportsDir, 'mochawesome.html');
+// Dátum pre názov reportu
+const now = new Date();
+const timestamp = now.toISOString().replace(/[:]/g, '-').split('.')[0]; // YYYY-MM-DDTHH-MM-SS
+const shortDate = timestamp.replace('T', '_'); // napr. 2025-05-16_07-00-00
 
-// Priečinok na publikovanie cez GitHub Pages
+// Cesty
+const reportsDir = path.join(__dirname, 'cypress', 'reports');
+const mergedReport = path.join(reportsDir, `merged-${shortDate}.json`);
+const htmlReportNamed = `mochawesome-${shortDate}.html`;
+const htmlReport = path.join(reportsDir, htmlReportNamed);
+
 const publicDir = path.join(__dirname, 'public');
-const publicHtml = path.join(publicDir, 'index.html');
+const publicReportPath = path.join(publicDir, htmlReportNamed);
+const publicIndexPath = path.join(publicDir, 'index.html');
 
 function run(command, description, allowFail = true) {
   try {
@@ -23,19 +29,12 @@ function run(command, description, allowFail = true) {
   }
 }
 
-function clearOldReports() {
-  if (fs.existsSync(reportsDir)) {
-    const files = fs.readdirSync(reportsDir);
-    files.forEach(file => {
-      if (file.endsWith('.json') || file.endsWith('.html')) {
-        fs.unlinkSync(path.join(reportsDir, file));
-      }
-    });
-    console.log('🧹 Staré reporty boli vymazané.');
+function prepareDirectories() {
+  if (!fs.existsSync(reportsDir)) {
+    fs.mkdirSync(reportsDir, { recursive: true });
   }
-  if (fs.existsSync(publicDir)) {
-    fs.rmSync(publicDir, { recursive: true, force: true });
-    console.log('🧼 Starý public obsah bol odstránený.');
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
   }
 }
 
@@ -53,27 +52,26 @@ function waitForJsonReports(timeout = 10000) {
 }
 
 async function main() {
-  clearOldReports();
+  prepareDirectories();
   run('npx cypress run', 'Spúšťanie Cypress testov', true);
 
   console.log('⏳ Čakanie na JSON reporty...');
   await waitForJsonReports();
 
   run(`npx mochawesome-merge ${reportsDir}/*.json --output ${mergedReport}`, 'Zlučovanie reportov');
-  run(`npx mochawesome-report-generator ${mergedReport} --reportDir ${reportsDir} --reportFilename mochawesome.html`, 'Generovanie HTML reportu');
+  run(`npx mochawesome-report-generator ${mergedReport} --reportDir ${reportsDir} --reportFilename ${htmlReportNamed}`, 'Generovanie HTML reportu');
 
   if (fs.existsSync(htmlReport)) {
-    // Kopírovanie do public/index.html
-    fs.mkdirSync(publicDir, { recursive: true });
-    fs.copyFileSync(htmlReport, publicHtml);
-    console.log(`✅ Report skopírovaný do ${publicHtml}`);
+    fs.copyFileSync(htmlReport, publicReportPath);
+    fs.copyFileSync(htmlReport, publicIndexPath);
+    console.log(`✅ Report uložený ako:`);
+    console.log(`- ${publicReportPath}`);
+    console.log(`- ${publicIndexPath} (posledný report)`);
   } else {
     console.warn('⚠️ HTML report sa nenašiel.');
   }
 
-  console.log('\n✅ Hotovo! Report nájdeš v:');
-  console.log(`- ${htmlReport}`);
-  console.log(`- ${publicHtml} (na GitHub Pages)`);
+  console.log('\n✅ Hotovo! Reporty nájdeš v zložke ./public');
 }
 
 main();
