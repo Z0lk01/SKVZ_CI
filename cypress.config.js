@@ -9,18 +9,20 @@ module.exports = defineConfig({
   },
   e2e: {
     baseUrl: 'https://www.tssmonitoring.sk',
+    video: true,
     setupNodeEvents(on, config) {
       // Add any node event listeners here
+      require('cypress-mochawesome-reporter/plugin')(on);
     },
   },
-  reporter: 'mochawesome',
-reporterOptions: {
-  reportDir: 'cypress/reports',
-  overwrite: false,
-  html: false,
-  json: true,
-  embeddedScreenshots: true,
-  inlineAssets: true
+  reporter: 'cypress-mochawesome-reporter',
+  reporterOptions: {
+   reportDir: 'cypress/reports',
+   overwrite: false,
+   html: false,
+   json: true,
+   embeddedScreenshots: true,
+   inlineAssets: true
 },
 screenshotsFolder: 'cypress/screenshots',
 
