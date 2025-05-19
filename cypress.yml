@@ -35,6 +35,8 @@ jobs:
           cp -r cypress/reports/* report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}/
           rm -rf report-portal/reports/SKVZ_CI/latest
           cp -r report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }} report-portal/reports/SKVZ_CI/latest
+      - name: Disable Jekyll build
+        run: touch report-portal/.nojekyll
 
       - name: Commit and push report
         run: |
