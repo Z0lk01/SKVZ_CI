@@ -2,7 +2,7 @@ name: Cypress Tests and Deploy Report
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   schedule:
     - cron: '0 5 * * *' # every day at 5:00 UTC
 
