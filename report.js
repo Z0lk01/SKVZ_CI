@@ -11,7 +11,7 @@ const shortDate = timestamp.replace('T', '_'); // napr. 2025-05-16_07-00-00
 const reportsDir = path.join(__dirname, 'cypress', 'reports');
 const mergedReport = path.join(reportsDir, `merged-${shortDate}.json`);
 const htmlReportNamed = `mochawesome-${shortDate}.html`;
-const htmlReport = path.join(reportsDir, htmlReportNamed);
+const htmlReport = path.join(publicDir, htmlReportNamed); // <-- use publicDir here!
 
 const publicDir = path.join(__dirname, 'public');
 const publicReportPath = path.join(publicDir, htmlReportNamed);
@@ -59,7 +59,7 @@ async function main() {
   await waitForJsonReports();
 
   run(`npx mochawesome-merge ${reportsDir}/*.json --output ${mergedReport}`, 'Zlučovanie reportov');
-  run(`npx mochawesome-report-generator ${mergedReport} --reportDir ${reportsDir} --reportFilename ${htmlReportNamed}`, 'Generovanie HTML reportu');
+  run(`npx mochawesome-report-generator ${mergedReport} --reportDir ${publicDir} --reportFilename ${htmlReportNamed}`, 'Generovanie HTML reportu');
 
   if (fs.existsSync(htmlReport)) {
     fs.copyFileSync(htmlReport, publicReportPath);

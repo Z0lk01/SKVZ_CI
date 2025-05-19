@@ -32,7 +32,7 @@ jobs:
       - name: Copy report to report-portal
         run: |
           mkdir -p report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}
-          cp -r cypress/reports/* report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}/
+          cp -r public/* report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}/
           rm -rf report-portal/reports/SKVZ_CI/latest
           cp -r report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }} report-portal/reports/SKVZ_CI/latest
       - name: Disable Jekyll build
@@ -44,5 +44,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add .
-          git commit -m "Deploy report for ${{ steps.report_date.outputs.date }}"
+          git commit -m "Deploy report for ${{ steps.report_date.outputs.date }}" --allow-empty
           git push
