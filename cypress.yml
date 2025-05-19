@@ -3,6 +3,8 @@ name: Cypress Tests and Deploy Report
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '0 5 * * *' # every day at 5:00 UTC
 
 jobs:
   test-and-deploy:
@@ -15,8 +17,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Cypress tests
-        run: npm run test
+      - name: Run Cypress and generate report
+        run: npm run report
 
       - name: Generate report date
         id: report_date
@@ -32,9 +34,10 @@ jobs:
       - name: Copy report to report-portal
         run: |
           mkdir -p report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}
-          cp -r public/* report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}/
+          cp cypress/reports/index.html report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}/index.html
           rm -rf report-portal/reports/SKVZ_CI/latest
           cp -r report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }} report-portal/reports/SKVZ_CI/latest
+
       - name: Disable Jekyll build
         run: touch report-portal/.nojekyll
 
