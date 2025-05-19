@@ -27,7 +27,7 @@ jobs:
       - name: 📁 Copy mochawesome.html to deployment dir
         run: |
           mkdir -p ./public
-          cp cypress/reports/mochawesome.html ./public/index.html
+          cp cypress/reports/index.html ./public/index.html
 
       - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
