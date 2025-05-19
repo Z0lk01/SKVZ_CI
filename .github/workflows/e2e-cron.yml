@@ -1,37 +1,47 @@
-name: Daily Cypress Tests & Report Deployment
+name: Scheduled Cypress Tests and Deploy Report
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # Spustenie každý deň o 07:00 UTC (pozor na časové pásma)
-  workflow_dispatch:     # Manuálne spustenie z GitHub rozhrania
+    - cron: '0 2 * * *'  # Každý deň o 2:00 UTC
+  workflow_dispatch:
 
 jobs:
-  cypress-tests:
+  test-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout repo
+      - name: Checkout SKVZ_CI repository
         uses: actions/checkout@v3
 
-      - name: 🟢 Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Cypress tests
+        run: npm run test
+
+      - name: Generate report date
+        id: report_date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Checkout mzilka.github.io repository
+        uses: actions/checkout@v3
         with:
-          node-version: '18'
+          repository: Z0lk01/mzilka.github.io
+          token: ${{ secrets.REPORT_DEPLOY_TOKEN }}
+          path: report-portal
 
-      - name: 📦 Install dependencies
-        run: npm install
-
-      - name: 🧪 Run Cypress tests and generate report
-        run: node report.js
-
-      - name: 📁 Copy mochawesome.html to deployment dir
+      - name: Copy report to report-portal
         run: |
-          mkdir -p ./public
-          cp cypress/reports/index.html ./public/index.html
+          mkdir -p report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}
+          cp -r cypress/reports/* report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}/
+          rm -rf report-portal/reports/SKVZ_CI/latest
+          cp -r report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }} report-portal/reports/SKVZ_CI/latest
 
-      - name: 🚀 Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: gh-pages
+      - name: Commit and push report
+        run: |
+          cd report-portal
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Deploy scheduled report for ${{ steps.report_date.outputs.date }}"
+          git push

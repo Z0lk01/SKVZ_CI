@@ -1,51 +1,46 @@
-name: Cypress Tests
+name: Cypress Tests and Deploy Report
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
 
 jobs:
-  cypress-run:
+  test-and-deploy:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        containers: [1, 2] # Paralelne 2 inštancie
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout SKVZ_CI repository
+        uses: actions/checkout@v3
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Start app and run Cypress tests
-        uses: cypress-io/github-action@v6
-        with:
-          start: npm start
-          wait-on: 'http://localhost:3000'
-          record: true
-          parallel: true
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Cypress tests
+        run: npm run test
 
-      - name: Merge Mochawesome reports
+      - name: Generate report date
+        id: report_date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Checkout mzilka.github.io repository
+        uses: actions/checkout@v3
+        with:
+          repository: Z0lk01/mzilka.github.io
+          token: ${{ secrets.REPORT_DEPLOY_TOKEN }}
+          path: report-portal
+
+      - name: Copy report to report-portal
         run: |
-          npx mochawesome-merge e2e/reports/*.json > e2e/reports/merged-report.json
+          mkdir -p report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}
+          cp -r cypress/reports/* report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }}/
+          rm -rf report-portal/reports/SKVZ_CI/latest
+          cp -r report-portal/reports/SKVZ_CI/${{ steps.report_date.outputs.date }} report-portal/reports/SKVZ_CI/latest
 
-      - name: Generate Mochawesome HTML report
+      - name: Commit and push report
         run: |
-          npx marge e2e/reports/merged-report.json --reportDir e2e/reports --reportFilename report.html
-
-      - name: Upload HTML report as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: mochawesome-html-report
-          path: e2e/reports/report.html
-
-      - name: Upload screenshots on failure
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: cypress-failure-screenshots
-          path: e2e/screenshots
+          cd report-portal
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Deploy report for ${{ steps.report_date.outputs.date }}"
+          git push
