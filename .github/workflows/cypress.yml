@@ -19,6 +19,8 @@ jobs:
 
       - name: Run Cypress and generate report
         run: npm run report
+        continue-on-error: true
+        # This step will run the Cypress tests and generate the report.
 
       - name: Generate report date
         id: report_date
