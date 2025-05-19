@@ -19,7 +19,7 @@ jobs:
 
       - name: Run Cypress and generate report
         run: npm run report 
-        ontinue-on-error: true
+        continue-on-error: true
 
       - name: Generate report date
         id: report_date
