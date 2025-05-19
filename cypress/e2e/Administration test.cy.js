@@ -67,7 +67,7 @@ describe('Testy TSS monitoringu', () => {
         cy.get('#select2-edit_users_language-container', { timeout: 5000 }).click();
         cy.get('#select2-edit_users_language-results > :nth-child(1)')
           .should("be.visible")
-          .and("have.text", "Čeština")
+          .and("have.text", "Čestina")
           .click();
         cy.get('#update_user_can_approve_driving-helptext > .switchery').click();
         cy.get('#update_user_prepare_to_rent-helptext > .switchery').click();
