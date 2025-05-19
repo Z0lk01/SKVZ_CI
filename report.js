@@ -1,6 +1,6 @@
-const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 // Dátum pre názov reportu
 const now = new Date();
@@ -9,11 +9,10 @@ const shortDate = timestamp.replace('T', '_'); // napr. 2025-05-16_07-00-00
 
 // Cesty
 const reportsDir = path.join(__dirname, 'cypress', 'reports');
-const mergedReport = path.join(reportsDir, `merged-${shortDate}.json`);
-const htmlReportNamed = `mochawesome-${shortDate}.html`;
-const htmlReport = path.join(publicDir, htmlReportNamed); // <-- use publicDir here!
-
 const publicDir = path.join(__dirname, 'public');
+const htmlReportNamed = `mochawesome-${shortDate}.html`;
+const mergedReport = path.join(reportsDir, `merged-${shortDate}.json`);
+const htmlReport = path.join(publicDir, htmlReportNamed);
 const publicReportPath = path.join(publicDir, htmlReportNamed);
 const publicIndexPath = path.join(publicDir, 'index.html');
 
