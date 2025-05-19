@@ -9,6 +9,7 @@ on:
 jobs:
   test-and-deploy:
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
       - name: Checkout SKVZ_CI repository
@@ -19,7 +20,7 @@ jobs:
 
       - name: Run Cypress and generate report
         run: npm run report 
-        continue-on-error: true
+        
 
       - name: Generate report date
         id: report_date
