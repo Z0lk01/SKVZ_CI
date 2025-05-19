@@ -2,7 +2,7 @@ name: Scheduled Cypress Tests and Deploy Report
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # Každý deň o 2:00 UTC
+    - cron: '0 5 * * *'  # Každý deň o 2:00 UTC
   workflow_dispatch:
 
 jobs:
