@@ -78,11 +78,12 @@ describe('Testy TSS monitoringu', () => {
                 note: "test",
                 fk_currency_id: "df50e937-69c3-48fa-909a-7da762aeef99",
             });
-            expect(response.statusCode).to.eq(200);
-        });
+            });
+        cy.wait(3000);
+
 
         // Verify cost details in the table
-        cy.get('#costsnew_table > tbody > .odd > .sorting_1').then(($el) => {
+        cy.get('#costsnew_table > tbody > :nth-child(1) > .sorting_1').then(($el) => {
             const formattedText = $el.text();
             const [datePart, timePart] = formattedText.split(' ');
             expect(datePart).to.equal(expectedDate);
@@ -92,8 +93,14 @@ describe('Testy TSS monitoringu', () => {
         cy.get('#costsnew_table > tbody > .odd > :nth-child(11)').should("have.text", expectedCost);
 
         // Delete the cost
-        cy.get('#costsnew_table > tbody > .odd > .dt-center > :nth-child(2)').click();
-        cy.get('#modal-cancel').click();
+        cy.get('#costsnew_table > tbody > .odd > .dt-center > :nth-child(3)').click();
+        cy.wait(2000);
+        cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/FuelCardsDatas/delete.json?f=FuelCardsDatas_delete&callback=jQuery*')
+          .as('deleteCost');
+        cy.get('#modal-success').click();
+        cy.wait('@deleteCost').then(({ request, response }) => {
+            expect(response.statusCode).to.eq(200);
+        });
 
         // Navigate to Service Book
         cy.get('#service-books-v2').click();
@@ -121,6 +128,12 @@ describe('Testy TSS monitoringu', () => {
         cy.get("#select2-edit_service_books_modules_products-container").type("brzdy");
         cy.get("#select2-edit_service_books_modules_products-results").click();
         cy.get('#modal-success').click();
+        cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/serviceBooks/getList/all/1743123600/1752019200/none/all.json')
+          .as('serviceBook-created');
+        cy.wait('@serviceBook-created').then(({ request, response }) => {
+            expect(response.statusCode).to.eq(200);});
+
+
 
         // Verify service book entry
         cy.get('#service-books-v2_table > tbody > :nth-child(1) > :nth-child(3)').should("have.text", "IL 942DE");

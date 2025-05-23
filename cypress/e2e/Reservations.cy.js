@@ -93,14 +93,66 @@ describe('Testy TSS monitoringu', () => {
         timelineButtons.forEach(button => {
             cy.get(button).should("be.visible");
         });
-
-        // Intercept and validate API call
+        //Vytvorenie žiadosti na požičanie vozidla
+        cy.get('#rent_cars_v2').scrollIntoView()
+        .click();
+        cy.get('#rent_cars_v2_button_0').click();
+        cy.get('#select2-edit_rent_cars_location-container').click();
+        cy.get('#select2-edit_rent_cars_location-results > :nth-child(1)')
+          .should("be.visible")
+          .and("have.text", "PRO-DOMA, SE")
+          .click();
+          cy.get('#edit_rent_cars_unit').click();
+          cy.get('#search_grid_units_table_filter > label > input').type("IL 942DE");
+          cy.get('#search_grid_units_table > tbody > :nth-child(1)').click();
+          cy.get('#edit_rent_cars_time').type("11:15");
+          cy.get('#edit_rent_cars_time_return').type("12:00");
+          cy.get('#select2-edit_rent_cars_drive_approver-container').scrollIntoView()
+          .should("be.visible")
+          .click();
+          cy.get('#select2-edit_rent_cars_drive_approver-results > :nth-child(1)')
+          .should("have.text", "mza test mza")
+          .click();
+          cy.get('#edit_rent_cars_destination').should("be.visible")
+          .type("Test cieľ");
+          cy.get('#edit_rent_cars_drive_number_passengers').should("be.visible")
+          .type("2");
+          cy.get('#edit_rent_cars_drive_note').should("be.visible")
+          .type("Test neúplného vyplnenia povinných polí v žiadosti");
+          cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/rentCars/create.json?f=rentCars_create&callback=jQuery*')
+          .as('Reservation_create_fail');
+          cy.get('#modal-success').click(); // zámerné neúplné vyplnenie žiadosti , mal by sa zobraziť error v response body
+          cy.wait('@Reservation_create_fail').then(({ request, response }) => {
+              expect(response.statusCode).to.eq(200);
+              expect(response.body).to.include("PURPOSE_ERROR_CODE");
+          });
+          //doplnenie chýbajúcich údajov
+          cy.get('#edit_rent_cars_drive_number_purpose_driving').should("be.visible")
+          .type("Test účel jazdy");
+          cy.get('#edit_rent_cars_unit').click();
+          cy.get('#search_grid_units_table_filter > label > input').type("IL 942DE");
+          cy.get('#search_grid_units_table > tbody > :nth-child(1)').click();
+          cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/rentCars/create.json?f=rentCars_create&callback=jQuery*')
+          .as('Reservation_create_success');
+          cy.get('#modal-success').scrollIntoView()
+          .click();
+          cy.wait('@Reservation_create_success').then(({ request, response }) => {
+              expect(response.statusCode).to.eq(200);
+              expect(response.body).to.include("null");// odpoveď by mala byť null, ak je všetko v poriadku a response je 200
+          });
+         });
+         it("Schvalovanie žiadosti", () => {
+          cy.get('#li-rentcar > [href="javascript:;"]').click();
+          cy.get('#rent_cars_requests_for_me_v2 > .title').scrollIntoView()
+          .should("be.visible")
+          .click();
+         // Overenie requestu pre otvrenie schvalovania
         cy.intercept({
             method: 'POST',
             url: "https://www.tssmonitoring.sk/api/v1.3/RentCars/read.json?f=RentCars_read&callback=jQuery*"
         }).as("apiRequest");
 
-        cy.get('#rent_cars_requests_for_me_v2_table > tbody > :nth-child(1) > .dt-center > :nth-child(2)')
+        cy.get(':nth-child(1) > .dt-center > :nth-child(2)')
           .scrollIntoView()
           .click();
 
@@ -126,7 +178,7 @@ describe('Testy TSS monitoringu', () => {
               .and("have.text", detail.text);
         });
 
-        cy.get('#edit_rent_cars_date')
+        cy.get('#edit_rent_cars_date').scrollIntoView()
           .should("be.visible")
           .and("have.value", moment().format('DD.MM.YYYY'));
 
@@ -141,10 +193,21 @@ describe('Testy TSS monitoringu', () => {
         cy.get('#edit_rent_cars_time_return')
           .should("be.visible")
           .and("have.value", "12:00");
-
-        cy.get('#modal-cancel')
+        
+        cy.get('#select2-edit_rent_cars_drive_approve_state-container')
+          .scrollIntoView()
+          .click();
+        cy.get('#select2-edit_rent_cars_drive_approve_state-results > :nth-child(2)')
+        .click();
+        cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/RentCars/update.json?f=RentCars_update&callback=jQuery*')
+          .as('Reservation_update');
+        cy.get('#modal-success')
           .scrollIntoView()
           .should("be.visible")
           .click();
+        cy.wait('@Reservation_update').then(({ request, response }) => {
+            expect(response.statusCode).to.eq(200);
+            expect(response.body).to.include("null");
     });
+});
 });

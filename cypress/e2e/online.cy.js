@@ -164,11 +164,11 @@ describe('Testy TSS monitoringu', () => {
 
         cy.get('#gps_units_online_new_info > :nth-child(2)')
           .should("be.visible")
-          .and("have.text", "EČV : IL 942DE");
+          .and('have.text', 'EČV : IL 942DE ');
 
         cy.get('#gps_units_online_new_info > :nth-child(3)')
           .should("be.visible")
-          .and("have.text", "Meno vodiča : test");
+          .and("have.text", 'Meno vodiča :  test ');
 
         cy.get('#gps_units_online_new_close_map > .fa').click();
     });

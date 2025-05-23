@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 const moment = require('moment');
 
-describe('Testy TSS monitoringu', () => {
+describe('Administr', () => {
     beforeEach(() => {
         const username = Cypress.env('username') || 'your-username';
         const password = Cypress.env('password') || 'your-password';
@@ -24,7 +24,7 @@ describe('Testy TSS monitoringu', () => {
         cy.wait('@webloading', { timeout: 10000 });
     });
 
-    it("Administration", () => {
+    it("User-created ", () => {
         // Handle news modal if present
         cy.get('body').then($body => {
             if ($body.find('#id_news_users_modal_content').length > 0) {
@@ -67,18 +67,31 @@ describe('Testy TSS monitoringu', () => {
         cy.get('#select2-edit_users_language-container', { timeout: 5000 }).click();
         cy.get('#select2-edit_users_language-results > :nth-child(1)')
           .should("be.visible")
-          .and("have.text", "Čestina")
+          .and("have.text", "Čeština")
           .click();
         cy.get('#update_user_can_approve_driving-helptext > .switchery').click();
         cy.get('#update_user_prepare_to_rent-helptext > .switchery').click();
 
         // Save the user
-        cy.get('#modal-success').click();
+        cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/users/create.json?f=users_create&callback=jQuery*')
+          .as('createUser');
+        cy.get('#modal-success').scrollIntoView()
+        .click({ force: true });
+        cy.wait('@createUser')
 
         // Verify the user in the table
         cy.get('#users_table_filter > label > input', { timeout: 5000 }).click().type("testuser");
         cy.get('#users_table > tbody > :nth-child(1) > :nth-child(2)').should("have.text", "testuser");
         cy.get('#users_table > tbody > :nth-child(1) > :nth-child(4)').should("have.text", 'Zákazník - administrátor');
-        });
-    });
+        cy.get('#users_table > tbody > :nth-child(1) > :nth-child(1) > :nth-child(4)')
+        .click();
+        cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/users/delete.json?f=users_delete&callback=jQuery*')
+          .as('userDelete');
+        cy.get('#modal-success').click();
+        cy.wait('@userDelete', { timeout: 30000 })
+            .then((interception) => {
+            assert.isNotNull(interception.response.body, 'API response is not null');
+            expect(interception.response.statusCode).to.equal(200);});
+            });
+      });
 
