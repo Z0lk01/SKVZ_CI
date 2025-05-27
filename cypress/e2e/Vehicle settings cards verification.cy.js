@@ -79,6 +79,12 @@ describe('Testy TSS monitoringu', () => {
     cy.get('#units-info-look-tab-4_link')
     .should('have.text', 'Obrázky a dokumenty')
     .and('be.visible')
+    cy.get('#edit_unit_basic_ecv-helptext > :nth-child(2)')
+    
+    
+
+
+
 
 
 
