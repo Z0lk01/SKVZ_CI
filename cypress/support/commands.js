@@ -29,8 +29,10 @@ Cypress.Commands.add('parseJsonpResponse', (interception) => {
   
   //Príkaz na vybranie včerajšeho dátumu v kalendári / yesterday= currentdate - 1day
   Cypress.Commands.add('selectYesterdayInCalendar', () => {
-    cy.get('.today') // uprav podľa svojej triedy
-      .prev()
-      .click();
+    cy.get('.today').filter((i, el) => {
+      // Get computed background color
+      return window.getComputedStyle(el).backgroundColor === 'rgb(21, 122, 192)';
+    })
+    .prev()
+    .click();
   });
-  
