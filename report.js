@@ -40,8 +40,20 @@ function waitForJsonReports(timeout = 10000) {
   });
 }
 
+function cleanOldReports() {
+  if (fs.existsSync(reportsDir)) {
+    fs.readdirSync(reportsDir).forEach(file => {
+      if (file.endsWith('.html') || file.endsWith('.json')) {
+        fs.unlinkSync(path.join(reportsDir, file));
+      }
+    });
+    console.log('🧹 Old reports deleted.');
+  }
+}
+
 async function main() {
   prepareDirectories();
+  cleanOldReports();
   run('npx cypress run', 'Running Cypress tests');
 
   console.log('⏳ Waiting for JSON reports...');
