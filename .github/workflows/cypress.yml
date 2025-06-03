@@ -19,6 +19,9 @@ jobs:
 
       - name: Run Cypress and generate report
         run: npm run report
+        env:
+          CYPRESS_username: ${{ secrets.CYPRESS_USERNAME }}
+          CYPRESS_password: ${{ secrets.CYPRESS_PASSWORD }}
         continue-on-error: true
         # This step will run the Cypress tests and generate the report.
 
