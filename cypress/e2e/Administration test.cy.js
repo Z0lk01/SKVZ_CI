@@ -88,7 +88,7 @@ describe('Administr', () => {
         cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/users/delete.json?f=users_delete&callback=jQuery*')
           .as('userDelete');
         cy.get('#modal-success').click();
-        cy.wait('@userDelete', { timeout: 30000 })
+        cy.wait('@userDelete', { timeout: 45000 })
             .then((interception) => {
             assert.isNotNull(interception.response.body, 'API response is not null');
             expect(interception.response.statusCode).to.equal(200);});

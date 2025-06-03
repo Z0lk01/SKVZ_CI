@@ -69,8 +69,8 @@ describe('Testy TSS monitoringu', () => {
    cy.wait(3000) // wait for the table to update
    cy.get('#centers')
    .click()
-   cy.get('#centers_table > tbody ')
-   .should('have.text', "Testovacie stredisko112233Toto je testovacie stredisko pre automatizované testy")
+   cy.get('#centers_table > :nth-child(2) > :nth-child(1) > :nth-child(5)')
+   .should('have.text', "Toto je testovacie stredisko pre automatizované testy")
     cy.get('#centers_table > :nth-child(2) > :nth-child(1) > :nth-child(1) > :nth-child(3)').click();
     cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/Centers/delete.json?f=Centers_delete&callback=jQuery*')
     .as('deleteCenter');

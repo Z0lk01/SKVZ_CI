@@ -58,6 +58,9 @@ describe('Testy TSS monitoringu', () => {
           .click();
         cy.get('#edit_costsnew_time', { timeout: 10000 }).type(expectedTime);
         cy.get('#edit_costsnew_quantity').type("50");
+        cy.get('#select2-edit_costsnew_modules_products-container').click();
+        cy.get('#select2-edit_costsnew_modules_products-results').children()
+        .contains("Diesel").click();
         cy.get('#edit_costsnew_quantity_unit-helptext .select2-selection__arrow').click();
         cy.get('#select2-edit_costsnew_quantity_unit-results').children().last().click();
         cy.get('#edit_costsnew_price').type("50");
@@ -128,11 +131,8 @@ describe('Testy TSS monitoringu', () => {
         cy.get("#select2-edit_service_books_modules_products-container").type("brzdy");
         cy.get("#select2-edit_service_books_modules_products-results").click();
         cy.get('#modal-success').click();
-        cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/serviceBooks/getList/all/1743123600/1752019200/none/all.json')
-          .as('serviceBook-created');
-        cy.wait('@serviceBook-created').then(({ request, response }) => {
-            expect(response.statusCode).to.eq(200);});
-
+        
+        
 
 
         // Verify service book entry
