@@ -79,6 +79,15 @@ describe('Testy TSS monitoringu', () => {
     cy.wait('@deleteCenter').then((interception) => {
       expect(interception.response.statusCode).to.eq(200);
     });
+    cy.get('.dt-center > :nth-child(2) > .fa')
+    .click();
+    cy.intercept('POST', 'https://www.tssmonitoring.sk/api/v1.3/Centers/remove.json?f=Centers_remove&callback=jQuery*')
+    .as('deleteCenterConfirmation');
+    cy.get('#modal-success')
+    .click();
+    cy.wait('@deleteCenterConfirmation').then((interception) => {
+      expect(interception.response.statusCode).to.eq(200);
+    });
    
 
 
