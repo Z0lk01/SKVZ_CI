@@ -40,7 +40,6 @@ describe('Testy TSS monitoringu', () => {
         // Verify dashboard element
         cy.get('#mainboard-content-body')
           .should('be.visible')
-          cy.get('#mainboard-content-body').should('be.visible');
         cy.get('#li-travelsmenu').scrollIntoView().and('have.text', 'Cestovné príkazy').click();
         cy.get('#domestic-allowances').scrollIntoView().click();
         cy.get('#domestic-allowances_button_0').shouldHaveTrimmedText('Pridať domáci cestovný príkaz')
